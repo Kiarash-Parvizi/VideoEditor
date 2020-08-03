@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/arrow.png</file>
+        <file>resources/fast-forward.png</file>
+        <file>resources/fast-forward_plus.png</file>
+        <file>resources/list.png</file>
+        <file>resources/measurement-png-ruler-ruler-png-image-23426-2400.png</file>
+        <file>resources/musicNote.png</file>
+        <file>resources/open-menu.png</file>
+        <file>resources/pause.png</file>
+        <file>resources/play_button.png</file>
+        <file>resources/play-button_sm.png</file>
+        <file>resources/play-button_ssm.png</file>
+        <file>resources/plus.png</file>
+        <file>resources/redo.png</file>
+        <file>resources/ruler.png</file>
+        <file>resources/scissors.png</file>
+        <file>resources/speaker.png</file>
+        <file>resources/undo.png</file>
+        <file>resources/fonts/Elianto-Regular.ttf</file>
+        <file>resources/fonts/Roboto-Bold.ttf</file>
+        <file>resources/audio/41.wav</file>
+        <file>resources/audio/ButtonClick.wav</file>
+        <file>resources/audio/done.wav</file>
+        <file>resources/audio/mouse.wav</file>
+        <file>resources/audio/space.wav</file>
+    </qresource>
+</RCC>

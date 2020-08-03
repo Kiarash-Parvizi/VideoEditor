@@ -1,11 +1,20 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQuickStyle>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+
+    //Set appProps
+    app.setOrganizationName("Kiarash");
+    app.setOrganizationDomain("Kiarash.com");
+    app.setApplicationName("Video Editor");
+
+    //Style
+    QQuickStyle::setStyle("Fusion");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
