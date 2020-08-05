@@ -4,6 +4,7 @@ import QtQuick.Dialogs.qml 1.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls 2.3
 import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.12
 
 // Basu-Video-Editor FrontEnd
 
@@ -21,6 +22,23 @@ ApplicationWindow {
     SoundEffects {
         id: soundEffects
     }
+
+    // Dialogs
+    Dialog {
+        id: aboutDialog
+        title: "About"
+        ColumnLayout {
+            Label {
+                text: "This project was developed by"
+            }
+            Label {
+                Layout.alignment: Layout.Center
+                text: "<a href='https://github.com/Kiarash-Parvizi'>Kiarash</a>"
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+        }
+    }
+
     FileDialog {
         id: fileDialog
         title: "Please choose your files"
@@ -35,6 +53,8 @@ ApplicationWindow {
             open()
         }
     }
+    // ---------
+
 
     // MenuBar
     menuBar: ProjectMenuBar {

@@ -39,20 +39,6 @@ MenuBar{
         }
         Menu {
             title: "Help"
-            Dialog {
-                id: aboutDialog
-                title: "About"
-                ColumnLayout {
-                    Label {
-                        text: "This project was developed by"
-                    }
-                    Label {
-                        Layout.alignment: Layout.Center
-                        text: "<a href='https://github.com/Kiarash-Parvizi'>Kiarash</a>"
-                        onLinkActivated: Qt.openUrlExternally(link)
-                    }
-                }
-            }
             Action {
                 text: "About"
                 onTriggered: {
