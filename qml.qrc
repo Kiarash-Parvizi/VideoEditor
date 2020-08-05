@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>SoundEffects.qml</file>
+        <file>SciButton.qml</file>
+        <file>ItemMenu.qml</file>
+        <file>MouseBox.qml</file>
+        <file>MediaSection.qml</file>
+        <file>TimeLine.qml</file>
     </qresource>
 </RCC>

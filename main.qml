@@ -8,6 +8,7 @@ import QtQuick.Controls 1.4
 import QtMultimedia 5.12
 import QtQuick.Controls 2.12
 import QtQuick.Controls 2.3
+import QtQuick.Dialogs 1.2
 
 // This hell was written by hand :)
 
@@ -22,188 +23,110 @@ ApplicationWindow {
     maximumHeight: Screen.height*0.7 + 200
     title: qsTr("Video Editor")
 
-    // audio files
-    SoundEffect {
-        id: clickSound
-        source: "resources/audio/ButtonClick.wav"
-        volume: 0.16
-        function call() {
-            play()
-        }
+    SoundEffects {
+        id: soundEffects
     }
-    SoundEffect {
-        id: clickSound_41
-        source: "resources/audio/41.wav"
-        volume: 0.16
-        function call() {
-            play()
+    FileDialog {
+        id: fileDialog
+        title: "Please choose your files"
+        folder: shortcuts.home
+        selectMultiple: true
+        property var callback: function() {}
+        onAccepted: {
+            callback(fileUrls)
         }
-    }
-    SoundEffect {
-        id: clickSound_space
-        source: "resources/audio/space.wav"
-        volume: 0.16
-        function call() {
-            play()
-        }
-    }
-    SoundEffect {
-        id: clickSound_mouse
-        source: "resources/audio/mouse.wav"
-        volume: 0.16
-        function call() {
-            play()
-        }
-    }
-    SoundEffect {
-        id: clickSound_done
-        source: "resources/audio/done.wav"
-        volume: 0.16
-        function call() {
-            play()
+        function getFiles(callBack) {
+            callback = callBack
+            open()
         }
     }
 
     // MenuBar
     menuBar: MenuBar{
+        background: Rectangle {
+            anchors.fill: parent
+            gradient: Gradient {
+                GradientStop { position: 0.0; color	: "#FDFEFE" }
+                GradientStop { position: 0.5; color : "#F7F9F9" }
+                GradientStop { position: 1.0; color	: "#F0F3F4" }
+            }
+        }
+
         Menu {
             title: "File"
-            MenuItem {
-                text: "Open"
-                onClicked: {
-                    clickSound_done.call()
+            Action {
+                text: "Add"
+                onTriggered: {
+                    soundEffects.play_done()
+                    fileDialog.getFiles(mediaMenu.addMedias)
                 }
             }
-            MenuItem {
+            Action {
+                text: "Open"
+                onTriggered: {
+                    soundEffects.play_done()
+                }
+            }
+            Action {
                 text: "Save"
-                onClicked: {
-                    clickSound_done.call()
+                onTriggered: {
+                    soundEffects.play_done()
                 }
             }
             onOpened: {
-                clickSound_done.call()
+                soundEffects.play_done()
+            }
+        }
+        Menu {
+            title: "Help"
+            Dialog {
+                id: aboutDialog
+                title: "About"
+                ColumnLayout {
+                    Label {
+                        text: "This project was developed by"
+                    }
+                    Label {
+                        Layout.alignment: Layout.Center
+                        text: "<a href='https://github.com/Kiarash-Parvizi'>Kiarash</a>"
+                        onLinkActivated: Qt.openUrlExternally(link)
+                    }
+                }
+            }
+            Action {
+                text: "About"
+                onTriggered: {
+                    aboutDialog.open()
+                    soundEffects.play_done()
+                }
+            }
+            onOpened: {
+                soundEffects.play_done()
             }
         }
     }
 
-    Button {
+    SciButton {
         anchors.left: window.left
         anchors.top: window.top
         focusPolicy: Qt.NoFocus
-        width: 40; height: 40;
-        x: 20; y: 20; z: 1
-        background: Rectangle {
-            opacity: 0
-        }
-        Image {
-            id: openMenuId
-            anchors.fill: parent
-            source: "resources/open-menu.png"
-        }
-        Glow {
-            anchors.fill: openMenuId
-            radius: 8
-            samples: 20
-            color: "#5070D7"
-            source: openMenuId
-            opacity: 0.6
-            z: 1
-        }
-        DropShadow {
-            anchors.fill: openMenuId
-            horizontalOffset: 3
-            verticalOffset: 3
-            radius: 8.0
-            samples: 17
-            color: "black"
-            z: 1
-            source: openMenuId
-        }
+        //click
         onClicked: {
             drawer.open()
-            clickSound_mouse.call()
+            soundEffects.play_mouse()
         }
     }
+
     Drawer {
         z: 10
         id: drawer
         width: 0.3 * window.width
         height: window.height
         interactive: true
-        ListModel {
-            id: drawer_listModel
-        }
 
-        ListView {
-            id: drawer_listViewId
+        ItemMenu {
+            id: mediaMenu
             anchors.fill: parent
-            anchors.leftMargin: 10
-            anchors.topMargin: 10
-            FontLoader {
-                id: robotoFontLoader
-                source: "resources/fonts/Elianto-Regular.ttf"
-            }
-            header: Rectangle {
-                id: drawerHeaderId
-                color: "#e5e4e2"
-                width: parent.width - 10
-                height: 60
-                Label {
-                    anchors.centerIn: parent
-                    text: "DOCUMENTS:"
-                    font.family: robotoFontLoader.name; font.pointSize: 13;
-                }
-            }
-            property int preSelectedId: -1
-            property string rectColor: "#c5c4c2"
-            function setFocus(index) {
-                if (preSelectedId >= 0 && preSelectedId < count) {
-                    drawer_listModel.setProperty(preSelectedId, "rectColor", rectColor)
-                }
-                drawer_listModel.setProperty(index, "rectColor", "#a5a4a2")
-                preSelectedId = index
-            }
-            function getMediaName(path) {
-                var fullName = (path.slice(path.lastIndexOf("/")+1))
-                if (fullName.length > 40) {
-                    return fullName.slice(0, 40) + "..."
-                }
-                return fullName
-            }
-            function addMedia(path) {
-                drawer_listModel.append({
-                    "rectColor": rectColor,
-                    "source": path,
-                    "name": getMediaName(path)
-                })
-            }
-
-            Component.onCompleted: {
-                addMedia("E:/Movies/John.Wick.2014.720p.RERIP.Ganool.mkv")
-            }
-
-            model: drawer_listModel
-            delegate: Rectangle {
-                color: rectColor
-                border.color: "#555452"
-                width: parent.width - 10
-                height: 40
-                Label {
-                    anchors.centerIn: parent
-                    text: name
-                    font.pointSize: 9
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        drawer_listViewId.setFocus(index)
-                        clickSound.call()
-                        // Action
-                        video.set_source(source)
-                    }
-                }
-            }
         }
     }
 
@@ -237,60 +160,9 @@ ApplicationWindow {
         }
     }
 
-    // boxPoser
-    Item {
-        visible: false
+    MouseBox {
         anchors.fill: parent
-        id: boxPoser
-        Rectangle {
-            id: redRect
-            x: 100; y: 100
-            width: 0; height: 0
-            color: "red"
-            opacity: 0.2
-        }
-        property int startX: 0
-        property int startY: 0
-
-        MouseArea {
-            anchors.fill: parent
-            onPressed: {
-                boxPoser.startX = mouseX
-                boxPoser.startY = mouseY
-                redRect.x = mouseX
-                redRect.y = mouseY
-                redRect.width = 0
-                redRect.height = 0
-            }
-
-            onMouseXChanged: {
-                print("X: " + mouseX)
-                var d = mouseX - boxPoser.startX
-                if (d === 0) {
-                    return
-                } if (d > 0) {
-                    redRect.width = d
-                } else {
-                    redRect.x = mouseX;
-                    redRect.width = -d
-                }
-            }
-            onMouseYChanged: {
-                print("Y: " + mouseY)
-                var h = mouseY - boxPoser.startY
-                if (h === 0) {
-                    return
-                } if (h > 0) {
-                    redRect.height = h
-                } else {
-                    redRect.y = mouseY;
-                    redRect.height = -h
-                }
-            }
-
-            onContainsMouseChanged: {
-            }
-        }
+        visible: false
     }
 
     // SplitView
@@ -301,11 +173,11 @@ ApplicationWindow {
         // Video
         Item {
             id: videoContainer
-            width: Window.width*0.68
-            Layout.minimumWidth: Window.width*0.65
+            width: window.width*0.68
+            Layout.minimumWidth: window.width*0.65
 
-            property int video_width: 800
-            property int video_height: 600
+            property int video_width: window.width*0.62
+            property int video_height: video_width * 0.75
 
             // ShadowLine
             Rectangle {
@@ -326,7 +198,7 @@ ApplicationWindow {
             // videoBackGround
             Rectangle {
                 id: videoBackGround
-                width: videoContainer.video_width + 2
+                width: videoContainer.video_width
                 height: videoContainer.video_height + 2
                 visible: true
                 color: "#1A1A1A"
@@ -364,10 +236,8 @@ ApplicationWindow {
                 height : videoContainer.video_height
                 visible: true
                 anchors.centerIn: parent
-                //source: "C:/Users/Rain/Desktop/Dev/QT/Text_Editor/Resources/R.mp4"
-                source: "E:/Movies/Law.Abiding.Citizen.2009.720p_harmonydl.mkv"
-                //source: "E:/Folders/Music/Music Pluss/Eluveitie/02. Epona.mp3"
                 property bool blackScreen: true
+                property bool hasSource: false
                 function set_play() {
                     blackScreen = false
                     focus = true
@@ -389,7 +259,7 @@ ApplicationWindow {
                     id: musicNoteImg
                     anchors.centerIn: parent
                     source: "resources/musicNote.png"
-                    visible: !video.hasVideo
+                    visible: !video.hasVideo && video.hasSource
                 }
 
                 Image {
@@ -414,7 +284,10 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        video.set_play()
+                        if (video.hasSource) {
+                            video.set_play()
+                        } else {
+                        }
                     }
                 }
 
@@ -435,11 +308,17 @@ ApplicationWindow {
                     timeLine.setPointerPosition(ratio)
                     focus = true
                 }
+                // Source Changed
+                onSourceChanged: {
+                    video.hasSource = true
+                    redLine_indicator.reset()
+                    mainMenu.reset_all()
+                }
             }
         }
 
         Rectangle {
-            Layout.minimumWidth: Window.width*0.3
+            Layout.minimumWidth: window.width*0.3
             color: "#2C2C2C"
 
             // blueRect Style
@@ -459,6 +338,7 @@ ApplicationWindow {
                 opacity: 0.3
             }
 
+            // Right Menu
             Flickable {
                 id: rightMenu
                 height: parent.height
@@ -466,16 +346,29 @@ ApplicationWindow {
                 contentHeight: mainMenu.height
                 contentWidth: parent.width
 
+                // Tools & Components
                 ColumnLayout {
                     id: mainMenu
                     spacing: 10
                     width: parent.width
+
+                    property var childs: Array.from(children)
+                    function reset_all() {
+                        childs.forEach(function(child) {
+                            child.reset()
+                        })
+                    }
+
                     // Interval-Cutter
                     Item {
                         id: intervalCutter
                         height: children[0].height
                         Layout.topMargin: 16
                         Layout.leftMargin: 20
+                        function reset() {
+                            intervalCutter_textField_from.text = ""
+                            intervalCutter_textField_to.text = ""
+                        }
 
                         Rectangle {
                             id: intervalCutter_bg
@@ -491,6 +384,7 @@ ApplicationWindow {
                                 Layout.preferredWidth: 25
                                 ToolTip.visible: hovered
                                 ToolTip.text: "add current position"
+                                focusPolicy: Qt.NoFocus
                                 Image {
                                     source: "resources/plus.png"
                                     y: parent.width*0.15
@@ -515,24 +409,43 @@ ApplicationWindow {
                                     if (val > curFromInt) {
                                         parent.children[2].text = val
                                     } else {
-                                        parent.children[2].text = curFrom
                                         parent.children[1].text = val
+                                        parent.children[2].text = curFrom
                                     }
                                 }
                             }
                             TextField{
+                                id: intervalCutter_textField_from
                                 Layout.alignment: Qt.AlignCenter
                                 Layout.preferredWidth: 80
                                 placeholderText: "from (ms)"
                                 validator: IntValidator {bottom: 1; top: video.duration}
+                                onTextChanged: {
+                                    var val = text.length > 0 ? parseInt(text) : 0
+                                    if (val > video.duration) {
+                                        text = video.duration
+                                    }
+                                    redLine_indicator.set_x(val/video.duration)
+                                    soundEffects.play_done()
+                                }
                             }
                             TextField{
+                                id: intervalCutter_textField_to
                                 Layout.alignment: Qt.AlignCenter
                                 Layout.preferredWidth: 80
                                 placeholderText: "to (ms)"
                                 validator: IntValidator {bottom: 1; top: video.duration}
+                                onTextChanged: {
+                                    var val = text.length > 0 ? parseInt(text) : 0
+                                    if (val > video.duration) {
+                                        text = video.duration
+                                    }
+                                    redLine_indicator.set_w(val/video.duration)
+                                    soundEffects.play_done()
+                                }
                             }
                             Button {
+                                focusPolicy: Qt.NoFocus
                                 Layout.preferredHeight: 25
                                 Layout.preferredWidth: 25
                                 ToolTip.visible: hovered
@@ -546,6 +459,7 @@ ApplicationWindow {
                                 }
                             }
                             Button {
+                                focusPolicy: Qt.NoFocus
                                 Layout.preferredHeight: 23
                                 Layout.preferredWidth: 23
                                 ToolTip.visible: hovered
@@ -559,6 +473,7 @@ ApplicationWindow {
                                 }
                             }
                             Button {
+                                focusPolicy: Qt.NoFocus
                                 Layout.preferredHeight: 23
                                 Layout.preferredWidth: 23
                                 Layout.leftMargin: -12
@@ -579,6 +494,7 @@ ApplicationWindow {
                         color: "red"
                         width: 10
                         height: 10
+                        function reset() {}
                     }
                 }
             }
@@ -586,7 +502,7 @@ ApplicationWindow {
 
     }
 
-    // VisualRep
+    // ControlView
     Item {
         width: parent.width; height: 42
         anchors.bottom: parent.bottom
@@ -622,7 +538,7 @@ ApplicationWindow {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 2
             width: init_width; height: 12
-            source: "file:///C:/Users/Rain/Desktop/Dev/QT/Text_Editor/resources/ruler.png"
+            source: "resources/ruler.png"
             OpacityMask {
                 source: ruler_mask
                 maskSource: ruler
@@ -666,13 +582,26 @@ ApplicationWindow {
             }
             // Red Indicators
             Rectangle {
+                id: redLine_indicator
                 color: "red"
                 opacity: 0.5
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 3
-                width: 100
+                width: 2
                 height: 4
                 y: parent.height
+                function set_x(x_r) {
+                    x = x_r * window.width
+                }
+                function set_w(w_r) {
+                    if (w_r === 0) {
+                        width = 2; return
+                    }
+                    width = w_r * window.width - x + 2
+                }
+                function reset() {
+                    width = 2
+                }
             }
         }
     }
