@@ -1,17 +1,18 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.12
+import QtGraphicalEffects 1.0
 import QtMultimedia 5.12
 
-// Video
+// VideoSection
 Item {
     id: videoContainer
-    width: Window.width*0.68
-    Layout.minimumWidth: Window.width*0.65
+    width: window.width*0.68
+    Layout.minimumWidth: window.width*0.65
 
-    property int video_width: 800
-    property int video_height: 600
+    property var video: video
+
+    property int video_width: window.width*0.62
+    property int video_height: video_width * 0.75
 
     // ShadowLine
     Rectangle {
@@ -32,7 +33,7 @@ Item {
     // videoBackGround
     Rectangle {
         id: videoBackGround
-        width: videoContainer.video_width + 2
+        width: videoContainer.video_width
         height: videoContainer.video_height + 2
         visible: true
         color: "#1A1A1A"
@@ -70,10 +71,8 @@ Item {
         height : videoContainer.video_height
         visible: true
         anchors.centerIn: parent
-        //source: "C:/Users/Rain/Desktop/Dev/QT/Text_Editor/Resources/R.mp4"
-        source: "E:/Movies/Law.Abiding.Citizen.2009.720p_harmonydl.mkv"
-        //source: "E:/Folders/Music/Music Pluss/Eluveitie/02. Epona.mp3"
         property bool blackScreen: true
+        property bool hasSource: false
         function set_play() {
             blackScreen = false
             focus = true
@@ -95,7 +94,7 @@ Item {
             id: musicNoteImg
             anchors.centerIn: parent
             source: "resources/musicNote.png"
-            visible: !video.hasVideo
+            visible: !video.hasVideo && video.hasSource
         }
 
         Image {
@@ -120,7 +119,10 @@ Item {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                video.set_play()
+                if (video.hasSource) {
+                    video.set_play()
+                } else {
+                }
             }
         }
 
@@ -136,10 +138,17 @@ Item {
             if (position != 0) {
                 blackScreen = false
             }
-            print("Pos Changed")
             var ratio = position/duration
             timeLine.setPointerPosition(ratio)
             focus = true
+        }
+        // Source Changed
+        onSourceChanged: {
+            video.play(); video.pause()
+            video.hasSource = true
+            editorFeedBack.redLine_indicator.reset()
+            toolMenu.mainMenu.reset_all()
+            timeLine.reset()
         }
     }
 }

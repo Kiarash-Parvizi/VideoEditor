@@ -9,7 +9,7 @@ Item {
         })
         var count = drawer_listViewId.count
         if (preCount !== count) {
-            video.set_source(drawer_listModel.get(preCount).source)
+            mediaSection.video.set_source(drawer_listModel.get(preCount).source)
             drawer_listViewId.setFocus(preCount)
         }
     }
@@ -89,7 +89,7 @@ Item {
                     drawer_listViewId.setFocus(index)
                     soundEffects.play_click()
                     // Action
-                    video.set_source(source)
+                    mediaSection.video.set_source(source)
                 }
             }
         }
