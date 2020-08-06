@@ -23,10 +23,6 @@ Item {
         anchors.fill: parent
         anchors.leftMargin: 10
         anchors.topMargin: 10
-        FontLoader {
-            id: robotoFontLoader
-            source: "resources/fonts/Elianto-Regular.ttf"
-        }
         header: Rectangle {
             id: drawerHeaderId
             color: "#e5e4e2"
@@ -35,7 +31,7 @@ Item {
             Label {
                 anchors.centerIn: parent
                 text: "DOCUMENTS:"
-                font.family: robotoFontLoader.name; font.pointSize: 13;
+                font.family: eliantoFontLoader.name; font.pointSize: 13;
             }
         }
         property int preSelectedId: -1

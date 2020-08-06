@@ -3,6 +3,11 @@ import QtQuick 2.12
 // boxPoser
 Item {
     id: boxPoser
+    //Rectangle {
+    //    color: "red"
+    //    anchors.fill: parent
+    //    opacity: 0.3
+    //}
 
     //Getters
     function getBox() {
@@ -31,26 +36,42 @@ Item {
         }
 
         onMouseXChanged: {
-            print("X: " + mouseX)
-            var d = mouseX - boxPoser.startX
+            var coord_x = mouseX
+            if (coord_x < 0) {
+                coord_x = 0
+            } else if (coord_x > width) {
+                coord_x = width
+            }
+            //
+            //print("X: " + coord_x)
+            var d = coord_x - boxPoser.startX
             if (d === 0) {
                 return
             } if (d > 0) {
+                redRect.x = startX
                 redRect.width = d
             } else {
-                redRect.x = mouseX;
+                redRect.x = coord_x;
                 redRect.width = -d
             }
         }
         onMouseYChanged: {
-            print("Y: " + mouseY)
-            var h = mouseY - boxPoser.startY
+            var coord_y = mouseY
+            if (coord_y < 0) {
+                coord_y = 0
+            } else if (coord_y > height) {
+                coord_y = height
+            }
+            //
+            //print("Y: " + coord_y)
+            var h = coord_y - boxPoser.startY
             if (h === 0) {
                 return
             } if (h > 0) {
+                redRect.y = startY;
                 redRect.height = h
             } else {
-                redRect.y = mouseY;
+                redRect.y = coord_y;
                 redRect.height = -h
             }
         }

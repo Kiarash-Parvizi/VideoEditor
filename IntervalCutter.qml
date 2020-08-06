@@ -5,8 +5,6 @@ import QtQuick.Controls 2.12
 Item {
     id: intervalCutter
     height: children[0].height
-    Layout.topMargin: 16
-    Layout.leftMargin: 20
     function reset() {
         intervalCutter_textField_from.text = ""
         intervalCutter_textField_to.text = ""

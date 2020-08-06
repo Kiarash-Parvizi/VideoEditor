@@ -15,20 +15,28 @@ MenuBar{
         Menu {
             title: "File"
             Action {
-                text: "Add"
+                text: "Import"
                 onTriggered: {
                     soundEffects.play_done()
                     fileDialog.getFiles(mediaMenu.addMedias)
                 }
             }
             Action {
-                text: "Open"
+                text: "Export"
+                onTriggered: {
+                    exportWindow.show()
+                    soundEffects.play_done()
+                }
+            }
+
+            Action {
+                text: "Open Project"
                 onTriggered: {
                     soundEffects.play_done()
                 }
             }
             Action {
-                text: "Save"
+                text: "Save Project"
                 onTriggered: {
                     soundEffects.play_done()
                 }

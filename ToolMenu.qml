@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import QtQuick.Controls 2.12
 import QtGraphicalEffects 1.0
 
 // ToolMenu
@@ -26,36 +27,79 @@ Rectangle {
         opacity: 0.3
     }
 
+    // Switcher
+    Button {
+        id: switcher
+        text: timeLine.visible ? "VIDEOSLIDER" : "TIMELINE"
+        font: eliantoFontLoader.name
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top; anchors.topMargin: parent.height*0.02
+        width: parent.width*0.4; height: parent.height*0.05
+        z: 1
+        onClicked: {
+            timeLine.set_visibility()
+        }
+    }
+    DropShadow {
+        anchors.fill: switcher
+        horizontalOffset: 3
+        verticalOffset: 3
+        radius: 8.0
+        samples: 17
+        color: "black"
+        source: switcher
+    }
+
     // Right Menu
-    Flickable {
-        id: rightMenu
-        height: parent.height
-        width: parent.width
-        contentHeight: mainMenu.height
-        contentWidth: parent.width
+    Item {
+        //id: rightMenu
+        height: parent.height; width: parent.width
+        anchors.top: parent.top; anchors.topMargin: parent.height*0.09
+        anchors.horizontalCenter: parent.horizontalCenter
+        //bg
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width*0.96; height: parent.parent.height*0.9
+            color: "#252525"
+        }
+        //flickable-view
+        Flickable {
+            anchors.fill: parent
+            anchors.leftMargin: parent.width*0.02
+            anchors.rightMargin: parent.width*0.02
+            contentHeight: mainMenu.height * 0.9
+            contentWidth: parent.width
+            flickableDirection: Flickable.VerticalFlick
+            clip: true
 
-        // Tools & Components
-        ColumnLayout {
-            id: mainMenu
-            spacing: 10
-            width: parent.width
+            // Tools & Components
+            ColumnLayout {
+                id: mainMenu
+                spacing: 10
+                width: parent.width
 
-            property var childs: Array.from(children)
-            function reset_all() {
-                childs.forEach(function(child) {
-                    child.reset()
-                })
+                property var childs: Array.from(children)
+                function reset_all() {
+                    childs.forEach(function(child) {
+                        child.reset()
+                    })
+                }
+
+                IntervalCutter {
+                    Layout.topMargin: 16
+                    Layout.leftMargin: 22
+                }
+
+                Rectangle {
+                    color: "red"
+                    width: 10
+                    height: 10
+                    function reset() {}
+                }
             }
+        }
 
-            IntervalCutter {
-            }
-
-            Rectangle {
-                color: "red"
-                width: 10
-                height: 10
-                function reset() {}
-            }
+        BoxShadows {
         }
     }
 }

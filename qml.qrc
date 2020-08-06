@@ -5,7 +5,7 @@
         <file>SciButton.qml</file>
         <file>ItemMenu.qml</file>
         <file>MouseBox.qml</file>
-        <file>TimeLine.qml</file>
+        <file>VideoSlider.qml</file>
         <file>IntervalCutter.qml</file>
         <file>BasicVideoControls.qml</file>
         <file>EditorFeedBack.qml</file>
@@ -13,5 +13,7 @@
         <file>MediaSection.qml</file>
         <file>ProjectMenuBar.qml</file>
         <file>TinyStyles.qml</file>
+        <file>BoxShadows.qml</file>
     </qresource>
+    <qresource lang="qml" prefix="/style"/>
 </RCC>

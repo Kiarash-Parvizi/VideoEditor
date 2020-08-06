@@ -70,10 +70,18 @@ Item {
         width : videoContainer.video_width
         height : videoContainer.video_height
         visible: true
+        playbackRate: 1
         anchors.centerIn: parent
+
+        property int mediaWidth: metaData.resolution ? metaData.resolution.width : width
+        property int mediaHeight: metaData.resolution ? metaData.resolution.height : height
+
         property bool blackScreen: true
         property bool hasSource: false
         function set_play() {
+            if (!hasVideo) {
+                return
+            }
             blackScreen = false
             focus = true
             if (video.playbackState !== MediaPlayer.PlayingState) {
@@ -87,7 +95,9 @@ Item {
         }
 
         function fast_forward(amount) {
-            video.seek(video.position + amount)
+            if (hasVideo) {
+                video.seek(video.position + amount)
+            }
         }
 
         Image {
@@ -139,7 +149,7 @@ Item {
                 blackScreen = false
             }
             var ratio = position/duration
-            timeLine.setPointerPosition(ratio)
+            videoSlider.setPointerPosition(ratio)
             focus = true
         }
         // Source Changed
@@ -148,7 +158,15 @@ Item {
             video.hasSource = true
             editorFeedBack.redLine_indicator.reset()
             toolMenu.mainMenu.reset_all()
-            timeLine.reset()
+            videoSlider.reset()
+        }
+
+        // Mouse-Box
+        MouseBox {
+            id: mouseBox
+            width: parent.mediaWidth; height: parent.mediaHeight
+            anchors.centerIn: parent
+            visible: true
         }
     }
 }
