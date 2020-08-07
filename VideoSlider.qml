@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtMultimedia 5.12
-// TimeLine
+// VideoSlider
 Rectangle {
     width: parent.width
     height: 32
@@ -11,8 +11,11 @@ Rectangle {
     anchors.bottom: parent.bottom
     anchors.bottomMargin: 43
 
+    property bool heldDown: false
     function setPointerPosition(d) {
-        timePointer.x = d*width
+        if (!heldDown) {
+            timePointer.x = d*width
+        }
     }
     function reset() {
         timePointer.x = 0
@@ -74,6 +77,13 @@ Rectangle {
             }
             timePointer.x = newX
             mediaSection.video.seek(mediaSection.video.duration*newX/width)
+        }
+        onPressedChanged: {
+            if (pressed) {
+                parent.heldDown = true
+            } else {
+                parent.heldDown = false
+            }
         }
     }
     Glow {

@@ -17,6 +17,9 @@ Item {
     function play_done() {
         clickSound_done.call()
     }
+    function play_done_low() {
+        clickSound_done_low.call()
+    }
 
     // audio files
     SoundEffect {
@@ -55,6 +58,14 @@ Item {
         id: clickSound_done
         source: "resources/audio/done.wav"
         volume: 0.16
+        function call() {
+            play()
+        }
+    }
+    SoundEffect {
+        id: clickSound_done_low
+        source: "resources/audio/done.wav"
+        volume: 0.04
         function call() {
             play()
         }

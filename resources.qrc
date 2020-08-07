@@ -24,5 +24,6 @@
         <file>resources/audio/done.wav</file>
         <file>resources/audio/mouse.wav</file>
         <file>resources/audio/space.wav</file>
+        <file>resources/timeLine.png</file>
     </qresource>
 </RCC>

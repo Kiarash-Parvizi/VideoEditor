@@ -30,6 +30,7 @@ Rectangle {
     // Switcher
     Button {
         id: switcher
+        focusPolicy: Qt.NoFocus
         text: timeLine.visible ? "VIDEOSLIDER" : "TIMELINE"
         font: eliantoFontLoader.name
         anchors.horizontalCenter: parent.horizontalCenter
@@ -37,7 +38,7 @@ Rectangle {
         width: parent.width*0.4; height: parent.height*0.05
         z: 1
         onClicked: {
-            timeLine.set_visibility()
+            timeLine.setMode()
         }
     }
     DropShadow {

@@ -78,6 +78,11 @@ Item {
 
         property bool blackScreen: true
         property bool hasSource: false
+        property bool hasTSource: false
+        property string fullVidSource: ""
+        property string tSource: ""
+        property bool timeLineMode: false
+        source: timeLineMode ? tSource : fullVidSource
         function set_play() {
             if (!hasVideo) {
                 return
@@ -104,18 +109,22 @@ Item {
             id: musicNoteImg
             anchors.centerIn: parent
             source: "resources/musicNote.png"
-            visible: !video.hasVideo && video.hasSource
+            visible: !video.timeLineMode && !video.hasVideo && video.hasSource
         }
-
         Image {
             id: videoPlayImg
             anchors.centerIn: parent
             source: "resources/play_button.png"
-            visible: !musicNoteImg.visible && video.blackScreen
+            visible: !video.timeLineMode && !musicNoteImg.visible && video.blackScreen
+        }
+        Image {
+            id: timeLineImg
+            anchors.centerIn: parent
+            source: "resources/timeLine.png"
+            visible: video.timeLineMode && !video.hasTSource
         }
 
         function resetProps() {
-            print("reset")
             seek(0)
             blackScreen = true
             musicNoteImg.visible = false
@@ -123,7 +132,12 @@ Item {
 
         function set_source(path) {
             resetProps()
-            source = path
+            fullVidSource = path
+        }
+
+        function set_tSource(path) {
+            tSource = path
+            hasTSource = true
         }
 
         MouseArea {
