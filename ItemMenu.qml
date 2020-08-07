@@ -80,12 +80,43 @@ Item {
             }
 
             MouseArea {
+                id: mouseArea
                 anchors.fill: parent
+                function play() {
+                    // Action
+                    mediaSection.video.set_source(source)
+                }
+
                 onClicked: {
                     drawer_listViewId.setFocus(index)
                     soundEffects.play_click()
-                    // Action
-                    mediaSection.video.set_source(source)
+                    // popup
+                    if (mouse.button === Qt.RightButton)
+                        contextMenu.popup()
+                    else play()
+                }
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                Menu {
+                    id: contextMenu
+                    MenuItem {
+                        text: "Select"
+                        onClicked: {
+                            mouseArea.play()
+                            soundEffects.play_done()
+                        }
+                    }
+                    MenuItem {
+                        text: "Remove"
+                        onClicked: {
+                            if (mediaSection.video.fullVidSource === source)
+                                mediaSection.video.set_source("")
+                            delete drawer_listViewId.dict[source]
+                            drawer_listModel.remove(index)
+                            soundEffects.play_done()
+                        }
+                    }
+                    z: 20
                 }
             }
         }
