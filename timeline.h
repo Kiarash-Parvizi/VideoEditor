@@ -4,18 +4,21 @@
 #include <QObject>
 #include <tvideo_model.h>
 
+#define ull unsigned long long
+
 class TimeLine : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int totalVidLen READ get_totalVidLen NOTIFY changed_totalVidLen)
+    Q_PROPERTY(ull totalVidLen READ get_totalVidLen NOTIFY changed_totalVidLen)
     Q_PROPERTY(QAbstractListModel* model READ get_model NOTIFY changed_model)
 public:
     explicit TimeLine(TVideo_Model* model, QObject* parent = nullptr);
 
-    int get_totalVidLen();
+    ull get_totalVidLen();
     QAbstractListModel* get_model();
 
-    Q_INVOKABLE int calc_width(int len, int winWidth);
+    Q_INVOKABLE ull calc_width(ull len, ull winWidth);
+    Q_INVOKABLE void ins_Buf(const QString& source, ull start, ull end, ull vTime);
     Q_INVOKABLE void del_VBuf(int idx);
 
 public slots:

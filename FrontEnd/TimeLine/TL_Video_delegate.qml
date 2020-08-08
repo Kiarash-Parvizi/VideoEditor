@@ -7,7 +7,7 @@ Component {
     id: del
     Rectangle {
         border.width: 1; border.color: "black"
-        width: CppTimeLine.calc_width(model.len, window.width); height: root.height
+        width: CppTimeLine.calc_width(model.len, window.width); height: parent.height
         color: "#303030"
         function reCalc() {
             width = CppTimeLine.calc_width(model.len, window.width)
@@ -25,7 +25,7 @@ Component {
                 color: "#3a3a3a"
             }
 
-            text: model._source
+            text: util.getMediaName(model._source)
             color: "#101010"
         }
         MouseArea {
@@ -38,20 +38,27 @@ Component {
                     contextMenu.x = mouseX
                 }
             }
-            Menu {
-                id: contextMenu
-                onOpened: {
-                    soundEffects.play_done()
-                }
-                MenuItem {
-                    text: "Remove Video"
-                    onClicked: {
-                        soundEffects.play_done()
-                        CppTimeLine.del_VBuf(model.index)
-                    }
-                }
-                z: 20
+        }
+        Menu {
+            id: contextMenu
+            onOpened: {
+                soundEffects.play_done()
             }
+            MenuItem {
+                text: "Remove Video"
+                onClicked: {
+                    soundEffects.play_done()
+                    CppTimeLine.del_VBuf(model.index)
+                }
+            }
+            MenuItem {
+                text: "Remove Video+Audio"
+                onClicked: {
+                    soundEffects.play_done()
+                    CppTimeLine.del_VBuf(model.index)
+                }
+            }
+            z: 20
         }
     }
 }

@@ -22,16 +22,18 @@ ApplicationWindow {
     minimumHeight: Screen.height*0.65 + 200
     maximumWidth: Screen.width*0.7
     maximumHeight: Screen.height*0.7 + 200
-    title: qsTr("Video Editor")
+    title: qsTr("Basu Video Editor")
+
+    Util {
+        id: util
+    }
 
     SoundEffects {
         id: soundEffects
     }
 
-    // FontAssets
-    FontLoader {
-        id: eliantoFontLoader
-        source: "qrc:/resources/fonts/Elianto-Regular.ttf"
+    FontAssets {
+        id: fontAssets
     }
 
 
@@ -168,6 +170,12 @@ ApplicationWindow {
     TimeLine {
         id: timeLine
         anchors.bottom: parent.bottom
+    }
+
+    // other events
+    onWidthChanged: {
+        timeLine.tl_data.tl_video.repeater.reCalc()
+        editorFeedBack.redLine_indicator.calc()
     }
 }
 

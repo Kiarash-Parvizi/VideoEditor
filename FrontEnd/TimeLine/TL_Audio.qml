@@ -8,7 +8,7 @@ Item {
     Label {
         anchors.centerIn: parent
         text: "NULL AUDIO BUFFER"
-        font: eliantoFontLoader.name
+        font: fontAssets.eliantoFontLoader.name
         color: "white"
     }
 

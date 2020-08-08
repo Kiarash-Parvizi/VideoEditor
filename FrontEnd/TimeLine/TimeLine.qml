@@ -6,6 +6,7 @@ import QtGraphicalEffects 1.0
 // TimeLine
 Item {
     id: timeLine
+    property alias tl_data: tl_data
     function setMode() {
         visible = !visible
         mediaSection.video.timeLineMode = visible
@@ -24,18 +25,19 @@ Item {
     MouseArea {
         anchors.fill: parent
         property int startX: 0
+        property alias trace: tl_ptr.trace
         onPressed: {
             startX = mouseX
             trace.x = mouseX
             trace.width = 0
-            pointer.x = mouseX
+            tl_ptr.pointer.x = mouseX
         }
         onPressedChanged: {
             soundEffects.play_done_low()
         }
         onMouseXChanged: {
             var coord_x = mouseX
-            pointer2.x = mouseX
+            tl_ptr.pointer2.x = mouseX
             timeLine.progressRatio = mouseX/width
             if (coord_x < 0) {
                 coord_x = 0
@@ -58,6 +60,7 @@ Item {
     }
     // Data
     TL_Data {
+        id: tl_data
         anchors.fill: parent
     }
 
@@ -73,44 +76,7 @@ Item {
             samples: 18; radius: 7; source: parent.children[0];
         }
     }
-    // pointer + trace container
-    Item {
-        anchors.fill: parent
-        // Pointer
-        Rectangle {
-            id: pointer
-            width: 1; height: parent.height; color: "#3060C0"; z: 2
-        }
-        // Pointer2
-        Rectangle {
-            id: pointer2
-            width: 1; height: parent.height; color: "#3060C0"; z: 2
-        }
-        // Trace
-        Rectangle {
-            id: trace
-            width: 2; height: parent.height; color: "#3060C0"; z: 2
-            opacity: 0.1
-        }
-        DropShadow {
-            anchors.fill: parent.children[0]; source: parent.children[0]
-            horizontalOffset: 1; verticalOffset: 0; z: 2
-            radius: 4; samples: 17; color: "black"
-        }
-        DropShadow {
-            anchors.fill: parent.children[0]; source: parent.children[0]
-            horizontalOffset: -1; verticalOffset: 0; z: 2
-            radius: 4; samples: 17; color: "black"
-        }
-        DropShadow {
-            anchors.fill: parent.children[1]; source: parent.children[0]
-            horizontalOffset: 1; verticalOffset: 0; z: 2
-            radius: 4; samples: 17; color: "black"
-        }
-        DropShadow {
-            anchors.fill: parent.children[1]; source: parent.children[0]
-            horizontalOffset: -1; verticalOffset: 0; z: 2
-            radius: 4; samples: 17; color: "black"
-        }
+    TL_Ptr {
+        id: tl_ptr
     }
 }

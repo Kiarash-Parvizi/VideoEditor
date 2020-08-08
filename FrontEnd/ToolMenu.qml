@@ -34,7 +34,7 @@ Rectangle {
         id: switcher
         focusPolicy: Qt.NoFocus
         text: timeLine.visible ? "VIDEOSLIDER" : "TIMELINE"
-        font: eliantoFontLoader.name
+        font: fontAssets.eliantoFontLoader.name
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top; anchors.topMargin: parent.height*0.02
         width: parent.width*0.4; height: parent.height*0.05
@@ -88,7 +88,7 @@ Rectangle {
                     })
                 }
 
-                IntervalCutter {
+                IntervalCpy {
                     Layout.topMargin: 16
                     Layout.leftMargin: 22
                 }

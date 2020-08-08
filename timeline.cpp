@@ -8,7 +8,7 @@ TimeLine::TimeLine(TVideo_Model* model, QObject* parent)
     connect(model, &TVideo_Model::changed_totalTime, this, &TimeLine::slot_totalVidLen);
 }
 
-int TimeLine::get_totalVidLen() {
+ull TimeLine::get_totalVidLen() {
     return model->get_totalTime();
 }
 
@@ -21,9 +21,13 @@ QAbstractListModel* TimeLine::get_model() {
     return model;
 }
 
-int TimeLine::calc_width(int len, int winWidth) {
+ull TimeLine::calc_width(ull len, ull winWidth) {
     qDebug() << "calc_width";
-    return winWidth * len/get_totalVidLen();
+    return winWidth * ((double)len/(double)get_totalVidLen());
+}
+
+void TimeLine::ins_Buf(const QString& source, ull start, ull end, ull vTime) {
+    model->Insert({source, end-start, start, end}, vTime);
 }
 
 void TimeLine::del_VBuf(int idx) {

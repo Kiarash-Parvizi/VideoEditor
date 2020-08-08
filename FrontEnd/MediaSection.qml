@@ -128,9 +128,13 @@ Item {
             seek(0)
             blackScreen = true
             musicNoteImg.visible = false
+            editorFeedBack.redLine_indicator.reset()
+            toolMenu.mainMenu.reset_all()
+            videoSlider.reset()
         }
 
         function set_source(path) {
+            if (path == source) { return }
             resetProps()
             fullVidSource = path
         }
@@ -170,9 +174,6 @@ Item {
         onSourceChanged: {
             video.play(); video.pause()
             video.hasSource = true
-            editorFeedBack.redLine_indicator.reset()
-            toolMenu.mainMenu.reset_all()
-            videoSlider.reset()
         }
 
         // Mouse-Box

@@ -9,27 +9,38 @@ TVideo_Model::TVideo_Model(QObject *parent) :
 
 void TVideo_Model::CreateDefaultModel()
 {
-    Add({"John.The grates sdf Something cool", 60, 100, 200});
-    Add({"John.The grates sdf Something cool", 80, 100, 200});
-    Add({"Vid12", 120, 100, 200});
-    Add({"Gholam", 500, 100, 200});
+    Add({"John.The grates sdf Something cool", 600000, 100, 200});
+    Add({"John.The grates sdf Something cool", 800000, 100, 200});
+    Add({"Vid12", 1200000, 100, 200});
+    Add({"Gholam", 5000000, 100, 200});
+    //Add({"Gholam", 5000000, 100, 200});
 }
 
-void TVideo_Model::set_totalTime(int v) {
+void TVideo_Model::set_totalTime(ull v) {
     totalTime = v;
     emit changed_totalTime();
 }
 
-void TVideo_Model::inc_totalTime(int v) {
+void TVideo_Model::inc_totalTime(ull v) {
     totalTime += v;
     emit changed_totalTime();
 }
 
 void TVideo_Model::Add(const TVideo_Model::ModelItem& item) {
     // begin
-    beginInsertRows(QModelIndex(),0,v.size());
+    beginInsertRows(QModelIndex(),v.size(),v.size());
     //
     v.push_back(item);
+    inc_totalTime(item.len);
+    // end
+    endInsertRows();
+}
+
+void TVideo_Model::Insert(const TVideo_Model::ModelItem& item, ull vTime) {
+    // begin
+    beginInsertRows(QModelIndex(),0,0);
+    //
+    v.insert(0, item);
     inc_totalTime(item.len);
     // end
     endInsertRows();

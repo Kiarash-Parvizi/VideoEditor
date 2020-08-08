@@ -34,4 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     timeline.h \
-    tvideo_model.h
+    tvideo_model.h \
+    util.h

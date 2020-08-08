@@ -31,7 +31,7 @@ Item {
             Label {
                 anchors.centerIn: parent
                 text: "DOCUMENTS:"
-                font.family: eliantoFontLoader.name; font.pointSize: 13;
+                font.family: fontAssets.eliantoFontLoader.name; font.pointSize: 13;
             }
         }
         property int preSelectedId: -1
@@ -43,13 +43,6 @@ Item {
             drawer_listModel.setProperty(index, "rectColor", "#a5a4a2")
             preSelectedId = index
         }
-        function getMediaName(path) {
-            var fullName = (path.slice(path.lastIndexOf("/")+1))
-            if (fullName.length > 40) {
-                return fullName.slice(0, 40) + "..."
-            }
-            return fullName
-        }
 
         property var dict: ({})
         function addMedia(path) {
@@ -60,7 +53,7 @@ Item {
             drawer_listModel.append({
                 "rectColor": rectColor,
                 "source": path,
-                "name": getMediaName(path)
+                "name": util.getMediaName(path)
             })
         }
 

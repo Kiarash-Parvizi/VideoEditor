@@ -6,7 +6,7 @@
         <file>FrontEnd/ItemMenu.qml</file>
         <file>FrontEnd/MouseBox.qml</file>
         <file>FrontEnd/VideoSlider.qml</file>
-        <file>FrontEnd/IntervalCutter.qml</file>
+        <file>FrontEnd/IntervalCpy.qml</file>
         <file>FrontEnd/BasicVideoControls.qml</file>
         <file>FrontEnd/EditorFeedBack.qml</file>
         <file>FrontEnd/ToolMenu.qml</file>
@@ -19,6 +19,9 @@
         <file>FrontEnd/TimeLine/TL_Video.qml</file>
         <file>FrontEnd/TimeLine/TL_Audio.qml</file>
         <file>FrontEnd/TimeLine/TL_Video_delegate.qml</file>
+        <file>FrontEnd/TimeLine/TL_Ptr.qml</file>
+        <file>FrontEnd/RC/FontAssets.qml</file>
+        <file>FrontEnd/Util.qml</file>
     </qresource>
     <qresource lang="qml" prefix="/style"/>
 </RCC>

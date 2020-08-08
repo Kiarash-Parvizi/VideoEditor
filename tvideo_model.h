@@ -4,13 +4,15 @@
 #include <QAbstractListModel>
 #include<QObject>
 
+#define ull unsigned long long
+
 class TVideo_Model : public QAbstractListModel
 {
     Q_OBJECT
 
     struct ModelItem {
         QString _source;
-        int len, start, end;
+        ull len, start, end;
     };
     enum { name=Qt::UserRole, _source, len, start, end };
 
@@ -25,6 +27,7 @@ public:
 
     // Add Item
     void Add(const ModelItem&);
+    void Insert(const ModelItem&, ull vTime);
     void Del(int idx);
 
 signals:
@@ -34,13 +37,13 @@ public slots:
     void setItemData2(int index, QVariant value, QString role);
 
 private:
-    int totalTime = 0;
+    ull totalTime = 0;
     QVector<ModelItem> v;
 
 private:
     void CreateDefaultModel();
-    void set_totalTime(int);
-    void inc_totalTime(int);
+    void set_totalTime(ull);
+    void inc_totalTime(ull);
 };
 
 #endif // TVIDEO_MODEL_H

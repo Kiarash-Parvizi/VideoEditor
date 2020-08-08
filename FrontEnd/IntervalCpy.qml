@@ -3,17 +3,16 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 // Interval-Cutter
 Item {
-    id: intervalCutter
+    id: intervalCpy
     height: children[0].height
     function reset() {
-        intervalCutter_textField_from.text = ""
-        intervalCutter_textField_to.text = ""
+        textField_from.text = ""
+        textField_to.text = ""
         editorFeedBack.redLine_indicator.set_x(0)
         editorFeedBack.redLine_indicator.set_w(0)
     }
 
     Rectangle {
-        id: intervalCutter_bg
         anchors.fill: parent.children[1]
         color: "#1C1C1C"
     }
@@ -21,11 +20,12 @@ Item {
 
     RowLayout {
         spacing: 16
+        property bool isEnabled: mediaSection.video.hasSource
         Button {
             Layout.preferredHeight: 25
             Layout.preferredWidth: 25
             ToolTip.visible: hovered
-            enabled: mediaSection.video.hasSource
+            enabled: parent.isEnabled
             ToolTip.text: "add current position"
             focusPolicy: Qt.NoFocus
             Image {
@@ -58,7 +58,7 @@ Item {
             }
         }
         TextField{
-            id: intervalCutter_textField_from
+            id: textField_from
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: 80
             placeholderText: "from (ms)"
@@ -66,7 +66,7 @@ Item {
             validator: IntValidator {bottom: 1; top: mediaSection.video.duration}
             onTextChanged: {
                 action_textChanged()
-                intervalCutter_textField_to.action_textChanged()
+                textField_to.action_textChanged()
                 soundEffects.play_done()
             }
             function action_textChanged() {
@@ -78,14 +78,14 @@ Item {
             }
         }
         TextField{
-            id: intervalCutter_textField_to
+            id: textField_to
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: 80
             placeholderText: "to (ms)"
             readOnly: !mediaSection.video.hasSource
             validator: IntValidator {bottom: 1; top: mediaSection.video.duration}
             onTextChanged: {
-                intervalCutter_textField_from.action_textChanged()
+                textField_from.action_textChanged()
                 action_textChanged()
                 soundEffects.play_done()
             }
@@ -102,45 +102,37 @@ Item {
             Layout.preferredHeight: 25
             Layout.preferredWidth: 25
             ToolTip.visible: hovered
-            ToolTip.text: "Cut"
+            ToolTip.text: "Copy"
+            enabled: parent.isEnabled
             Image {
-                source: "qrc:/resources/scissors.png"
+                source: "qrc:/resources/cpy.png"
                 y: parent.width*0.15
                 x: y
                 width: parent.width*0.7
                 height: parent.height*0.7
             }
             onClicked: {
-                intervalCutter.reset()
+                parent.start = textField_from.text
+                parent.end   = textField_to.text
+                parent._source = mediaSection.video.fullVidSource
+                parent.hasData = true
             }
         }
+        property int start: 0
+        property int end  : 0
+        property string _source: ""
+        property bool hasData: false
         Button {
             focusPolicy: Qt.NoFocus
-            Layout.preferredHeight: 23
-            Layout.preferredWidth: 23
+            Layout.preferredHeight: 25
+            Layout.preferredWidth: 25
             ToolTip.visible: hovered
-            ToolTip.text: "Undo"
-            Image {
-                source: "qrc:/resources/undo.png"
-                y: parent.width*0.15
-                x: y
-                width: parent.width*0.7
-                height: parent.height*0.7
-            }
-        }
-        Button {
-            focusPolicy: Qt.NoFocus
-            Layout.preferredHeight: 23
-            Layout.preferredWidth: 23
-            Layout.leftMargin: -12
-            ToolTip.visible: hovered
-            ToolTip.text: "Redo"
-            Image {
-                source: "qrc:/resources/redo.png"
-                y: parent.width*0.15
-                x: y
-                width: parent.width*0.7
-                height: parent.height*0.7
+            ToolTip.text: "Paste"
+            enabled: parent.isEnabled
+            text: "P"; font: fontAssets.eliantoFontLoader.name
+            onClicked: {
+                if (!parent.hasData) return
+                CppTimeLine.ins_Buf(parent._source, parent.start, parent.end, 0)
             }
         }
     }

@@ -4,13 +4,12 @@ import QtQuick.Controls 2.12
 import "../RC"
 
 Item {
-    id: root
-
+    property alias repeater: repeater
     //BG
     Label {
         anchors.centerIn: parent
         text: "NULL VIDEO BUFFER"
-        font: eliantoFontLoader.name
+        font: fontAssets.eliantoFontLoader.name
         color: "white"
     }
 

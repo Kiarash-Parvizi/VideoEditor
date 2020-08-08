@@ -93,17 +93,34 @@ Item {
             width: 2
             height: 4
             y: parent.height
-            function set_x(x_r) {
+            property real x_r: 0
+            property real w_r: 0
+            function set_x(x_ratio) {
+                x_r = x_ratio
+                calc_x()
+            }
+            function set_w(w_ratio) {
+                w_r = w_ratio
+                calc_w()
+            }
+            function reset() {
+                x_r = 0; w_r = 0
+                width = 2
+            }
+
+            // calc
+            function calc() {
+                calc_x(); calc_w()
+            }
+
+            function calc_x() {
                 x = x_r * window.width
             }
-            function set_w(w_r) {
+            function calc_w() {
                 if (w_r === 0) {
                     width = 2; return
                 }
                 width = w_r * window.width - x + 2
-            }
-            function reset() {
-                width = 2
             }
         }
     }
