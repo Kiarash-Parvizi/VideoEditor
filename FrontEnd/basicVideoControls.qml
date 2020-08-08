@@ -28,7 +28,7 @@ Rectangle {
         anchors.topMargin: 0
         spacing: 10
         Image {
-            source: "resources/speaker.png"
+            source: "qrc:/resources/speaker.png"
             Layout.preferredWidth: 17; Layout.preferredHeight: 17
         }
         Slider {
@@ -59,7 +59,7 @@ Rectangle {
             Image {
                 id: playImg
                 visible: mediaSection.video.playbackState !== MediaPlayer.PlayingState
-                source: "resources/play-button_sm.png"
+                source: "qrc:/resources/play-button_sm.png"
                 x: 7; y: 7
                 width: 20
                 height: 20
@@ -67,7 +67,7 @@ Rectangle {
             Image {
                 id: pauseImg
                 visible: !playImg.visible
-                source: "resources/pause.png"
+                source: "qrc:/resources/pause.png"
                 x: 7; y: 7
                 width: 20
                 height: 20
@@ -86,7 +86,7 @@ Rectangle {
             Layout.preferredHeight: 30
             Layout.preferredWidth: 30
             Image {
-                source: "resources/fast-forward_plus.png"
+                source: "qrc:/resources/fast-forward_plus.png"
                 x: 6; y: 5
                 width: 20
                 height: 20
@@ -109,7 +109,7 @@ Rectangle {
             Layout.preferredHeight: 30
             Layout.preferredWidth: 30
             Image {
-                source: "resources/fast-forward.png"
+                source: "qrc:/resources/fast-forward.png"
                 x: 6; y: 5
                 width: 20
                 height: 20
@@ -132,7 +132,7 @@ Rectangle {
             Layout.preferredWidth: 30
             id: fastForward
             Image {
-                source: "resources/fast-forward.png"
+                source: "qrc:/resources/fast-forward.png"
                 x: 6; y: 5
                 width: 20
                 height: 20
@@ -150,7 +150,7 @@ Rectangle {
             Layout.preferredWidth: 30
             id: fastForward_plus
             Image {
-                source: "resources/fast-forward_plus.png"
+                source: "qrc:/resources/fast-forward_plus.png"
                 x: 6; y: 5
                 width: 20
                 height: 20

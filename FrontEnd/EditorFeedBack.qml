@@ -41,7 +41,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 2
         width: init_width; height: 12
-        source: "resources/ruler.png"
+        source: "qrc:/resources/ruler.png"
         OpacityMask {
             source: ruler_mask
             maskSource: ruler

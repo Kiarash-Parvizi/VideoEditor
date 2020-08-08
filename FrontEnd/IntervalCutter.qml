@@ -29,7 +29,7 @@ Item {
             ToolTip.text: "add current position"
             focusPolicy: Qt.NoFocus
             Image {
-                source: "resources/plus.png"
+                source: "qrc:/resources/plus.png"
                 y: parent.width*0.15
                 x: y
                 width: parent.width*0.7
@@ -104,7 +104,7 @@ Item {
             ToolTip.visible: hovered
             ToolTip.text: "Cut"
             Image {
-                source: "resources/scissors.png"
+                source: "qrc:/resources/scissors.png"
                 y: parent.width*0.15
                 x: y
                 width: parent.width*0.7
@@ -121,7 +121,7 @@ Item {
             ToolTip.visible: hovered
             ToolTip.text: "Undo"
             Image {
-                source: "resources/undo.png"
+                source: "qrc:/resources/undo.png"
                 y: parent.width*0.15
                 x: y
                 width: parent.width*0.7
@@ -136,7 +136,7 @@ Item {
             ToolTip.visible: hovered
             ToolTip.text: "Redo"
             Image {
-                source: "resources/redo.png"
+                source: "qrc:/resources/redo.png"
                 y: parent.width*0.15
                 x: y
                 width: parent.width*0.7

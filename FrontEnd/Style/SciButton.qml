@@ -11,7 +11,7 @@ Button {
     Image {
         id: openMenuId
         anchors.fill: parent
-        source: "resources/open-menu.png"
+        source: "qrc:/resources/open-menu.png"
     }
     Glow {
         anchors.fill: openMenuId

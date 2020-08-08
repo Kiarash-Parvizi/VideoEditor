@@ -24,7 +24,7 @@ Item {
     // audio files
     SoundEffect {
         id: clickSound
-        source: "resources/audio/ButtonClick.wav"
+        source: "qrc:/resources/audio/ButtonClick.wav"
         volume: 0.16
         function call() {
             play()
@@ -32,7 +32,7 @@ Item {
     }
     SoundEffect {
         id: clickSound_41
-        source: "resources/audio/41.wav"
+        source: "qrc:/resources/audio/41.wav"
         volume: 0.16
         function call() {
             play()
@@ -40,7 +40,7 @@ Item {
     }
     SoundEffect {
         id: clickSound_space
-        source: "resources/audio/space.wav"
+        source: "qrc:/resources/audio/space.wav"
         volume: 0.16
         function call() {
             play()
@@ -48,7 +48,7 @@ Item {
     }
     SoundEffect {
         id: clickSound_mouse
-        source: "resources/audio/mouse.wav"
+        source: "qrc:/resources/audio/mouse.wav"
         volume: 0.16
         function call() {
             play()
@@ -56,7 +56,7 @@ Item {
     }
     SoundEffect {
         id: clickSound_done
-        source: "resources/audio/done.wav"
+        source: "qrc:/resources/audio/done.wav"
         volume: 0.16
         function call() {
             play()
@@ -64,7 +64,7 @@ Item {
     }
     SoundEffect {
         id: clickSound_done_low
-        source: "resources/audio/done.wav"
+        source: "qrc:/resources/audio/done.wav"
         volume: 0.04
         function call() {
             play()

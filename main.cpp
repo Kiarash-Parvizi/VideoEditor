@@ -1,6 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
+#include <QQmlContext>
+
+#include <timeline.h>
 #include <QIcon>
 
 int main(int argc, char *argv[])
@@ -21,7 +24,13 @@ int main(int argc, char *argv[])
     //**later
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+
+    // Model Extraction
+    TVideo_Model tVideo_Model;
+    TimeLine timeLine(&tVideo_Model);
+    engine.rootContext()->setContextProperty("CppTimeLine", &timeLine);
+
+    const QUrl url(QStringLiteral("qrc:/FrontEnd/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

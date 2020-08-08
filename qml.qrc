@@ -1,19 +1,24 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>SoundEffects.qml</file>
-        <file>SciButton.qml</file>
-        <file>ItemMenu.qml</file>
-        <file>MouseBox.qml</file>
-        <file>VideoSlider.qml</file>
-        <file>IntervalCutter.qml</file>
-        <file>BasicVideoControls.qml</file>
-        <file>EditorFeedBack.qml</file>
-        <file>ToolMenu.qml</file>
-        <file>MediaSection.qml</file>
-        <file>ProjectMenuBar.qml</file>
-        <file>TinyStyles.qml</file>
-        <file>BoxShadows.qml</file>
+        <file>FrontEnd/main.qml</file>
+        <file>FrontEnd/RC/SoundEffects.qml</file>
+        <file>FrontEnd/Style/SciButton.qml</file>
+        <file>FrontEnd/ItemMenu.qml</file>
+        <file>FrontEnd/MouseBox.qml</file>
+        <file>FrontEnd/VideoSlider.qml</file>
+        <file>FrontEnd/IntervalCutter.qml</file>
+        <file>FrontEnd/BasicVideoControls.qml</file>
+        <file>FrontEnd/EditorFeedBack.qml</file>
+        <file>FrontEnd/ToolMenu.qml</file>
+        <file>FrontEnd/MediaSection.qml</file>
+        <file>FrontEnd/ProjectMenuBar.qml</file>
+        <file>FrontEnd/Style/TinyStyles.qml</file>
+        <file>FrontEnd/Style/BoxShadows.qml</file>
+        <file>FrontEnd/TimeLine/TimeLine.qml</file>
+        <file>FrontEnd/TimeLine/TL_Data.qml</file>
+        <file>FrontEnd/TimeLine/TL_Video.qml</file>
+        <file>FrontEnd/TimeLine/TL_Audio.qml</file>
+        <file>FrontEnd/TimeLine/TL_Video_delegate.qml</file>
     </qresource>
     <qresource lang="qml" prefix="/style"/>
 </RCC>

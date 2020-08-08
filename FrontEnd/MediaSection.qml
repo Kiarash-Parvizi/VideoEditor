@@ -108,19 +108,19 @@ Item {
         Image {
             id: musicNoteImg
             anchors.centerIn: parent
-            source: "resources/musicNote.png"
+            source: "qrc:/resources/musicNote.png"
             visible: !video.timeLineMode && !video.hasVideo && video.hasSource
         }
         Image {
             id: videoPlayImg
             anchors.centerIn: parent
-            source: "resources/play_button.png"
+            source: "qrc:/resources/play_button.png"
             visible: !video.timeLineMode && !musicNoteImg.visible && video.blackScreen
         }
         Image {
             id: timeLineImg
             anchors.centerIn: parent
-            source: "resources/timeLine.png"
+            source: "qrc:/resources/timeLine.png"
             visible: video.timeLineMode && !video.hasTSource
         }
 

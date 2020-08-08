@@ -15,7 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        timeline.cpp
+        timeline.cpp \
+        tvideo_model.cpp
 
 RESOURCES += qml.qrc \
     resources.qrc
@@ -32,4 +33,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    timeline.h
+    timeline.h \
+    tvideo_model.h
