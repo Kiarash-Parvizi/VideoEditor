@@ -16,6 +16,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            //print("VideoMode Focus by click")
             mediaSection.video.focus = true
         }
     }

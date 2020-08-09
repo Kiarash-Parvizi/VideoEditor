@@ -7,24 +7,26 @@
 
 #define ll long long
 
+struct ModelItem {
+    QString _source;
+    ll len, start, end;
+    bool hasAudio;
+    void calcLen() {
+        len = end - start;
+    }
+    void set_start(ll v) {
+        start = v; calcLen();
+    }
+    void set_end(ll v) {
+        end   = v; calcLen();
+    }
+};
+
 class TVideo_Model : public QAbstractListModel
 {
     Q_OBJECT
 
-    struct ModelItem {
-        QString _source;
-        ll len, start, end;
-        void calcLen() {
-            len = end - start;
-        }
-        void set_start(ll v) {
-            start = v; calcLen();
-        }
-        void set_end(ll v) {
-            end   = v; calcLen();
-        }
-    };
-    enum { name=Qt::UserRole, _source, len, start, end };
+    enum { name=Qt::UserRole, _source, len, start, end, hasAudio };
 
 public:
     explicit TVideo_Model(QObject *parent = nullptr);
@@ -41,6 +43,10 @@ public:
     void Insert_Buf(const ModelItem&, ll vTime);
     void Rem_inclusive(int s, int e);
     void Del(int idx);
+
+    const QVector<ModelItem>* getModelVec() {
+        return &v;
+    }
 
     // setup
     void set_emitStateChanged_func(const std::function<void()>&);

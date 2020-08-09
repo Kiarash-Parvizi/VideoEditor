@@ -5,6 +5,7 @@ import QtMultimedia 5.12
 
 // VideoSection
 Item {
+    property alias videoPlus: videoPlus
     id: videoContainer
     width: window.width*0.68
     Layout.minimumWidth: window.width*0.65
@@ -64,25 +65,34 @@ Item {
         opacity: 0.4
         z: 1
     }
+    property bool timeLineMode: false
+    onTimeLineModeChanged: {
+        video.timeLineMode_changed()
+        video.focus = !timeLineMode
+        //
+        videoPlus.timeLineMode_changed()
+        //videoPlus.
+    }
 
     Video {
         id: video
         width : videoContainer.video_width
         height : videoContainer.video_height
-        visible: true
+        visible: !timeLineMode
         playbackRate: 1
         anchors.centerIn: parent
+
+        function timeLineMode_changed() {
+            if (timeLineMode) pause()
+        }
 
         property int mediaWidth: metaData.resolution ? metaData.resolution.width : width
         property int mediaHeight: metaData.resolution ? metaData.resolution.height : height
 
         property bool blackScreen: true
         property bool hasSource: false
-        property bool hasTSource: false
         property string fullVidSource: ""
-        property string tSource: ""
-        property bool timeLineMode: false
-        source: timeLineMode ? tSource : fullVidSource
+        source: fullVidSource
         function set_play() {
             if (!hasVideo) {
                 return
@@ -105,24 +115,6 @@ Item {
             }
         }
 
-        Image {
-            id: musicNoteImg
-            anchors.centerIn: parent
-            source: "qrc:/resources/musicNote.png"
-            visible: !video.timeLineMode && !video.hasVideo && video.hasSource
-        }
-        Image {
-            id: videoPlayImg
-            anchors.centerIn: parent
-            source: "qrc:/resources/play_button.png"
-            visible: !video.timeLineMode && !musicNoteImg.visible && video.blackScreen
-        }
-        Image {
-            id: timeLineImg
-            anchors.centerIn: parent
-            source: "qrc:/resources/timeLine.png"
-            visible: video.timeLineMode && !video.hasTSource
-        }
 
         function resetProps() {
             seek(0)
@@ -139,11 +131,6 @@ Item {
             fullVidSource = path
         }
 
-        function set_tSource(path) {
-            tSource = path
-            hasTSource = true
-        }
-
         MouseArea {
             anchors.fill: parent
             onClicked: {
@@ -154,9 +141,10 @@ Item {
             }
         }
 
-        focus: true
+        focus: !timeLineMode
 
         Keys.onSpacePressed: {
+            print("space")
             set_play()
         }
         Keys.onLeftPressed: fast_forward(-5000)
@@ -183,5 +171,44 @@ Item {
             anchors.centerIn: parent
             visible: true
         }
+        Component.onCompleted: {
+            //playbackRate = 1
+        }
+    }
+    // VideoPlus
+    VideoPlus {
+        id: videoPlus
+        focus: timeLineMode
+        vid_width : videoContainer.video_width
+        vid_height: videoContainer.video_height
+        visible: timeLineMode
+        anchors.centerIn: parent
+    }
+
+    // ICONS
+    Image {
+        id: musicNoteImg
+        anchors.centerIn: video
+        source: "qrc:/resources/musicNote.png"
+        visible: !timeLineMode && !video.hasVideo && video.hasSource
+    }
+    Image {
+        id: videoPlayImg
+        anchors.centerIn: video
+        source: "qrc:/resources/play_button.png"
+        visible: !timeLineMode && !musicNoteImg.visible && video.blackScreen
+    }
+    Rectangle {
+        color: "#1A1A1A"
+        anchors.centerIn: video
+        width: timeLineImg.width*1.8; height: timeLineImg.height*1.8
+        visible: timeLineImg.visible
+        radius: width/2
+    }
+    Image {
+        id: timeLineImg
+        anchors.centerIn: video
+        source: "qrc:/resources/timeLine.png"
+        visible: timeLineMode && !videoPlus.isPlaying
     }
 }

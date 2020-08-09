@@ -4,6 +4,7 @@
 #include <QQmlContext>
 
 #include <timeline.h>
+#include <timeline_player.h>
 #include <QIcon>
 
 int main(int argc, char *argv[])
@@ -15,7 +16,7 @@ int main(int argc, char *argv[])
     //Set appProps
     app.setOrganizationName("Kiarash");
     app.setOrganizationDomain("Kiarash.com");
-    app.setApplicationName("Video Editor");
+    app.setApplicationName("VideoEditor");
 
     //Style
     QQuickStyle::setStyle("Fusion");
@@ -28,7 +29,9 @@ int main(int argc, char *argv[])
     // Model Extraction
     TVideo_Model tVideo_Model;
     TimeLine timeLine(&tVideo_Model);
+    TimeLine_Player TL_Player(tVideo_Model);
     engine.rootContext()->setContextProperty("CppTimeLine", &timeLine);
+    engine.rootContext()->setContextProperty("TL_Player", &TL_Player);
 
     const QUrl url(QStringLiteral("qrc:/FrontEnd/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

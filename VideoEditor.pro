@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         timeline.cpp \
+        timeline_player.cpp \
         tvideo_model.cpp
 
 RESOURCES += qml.qrc \
@@ -34,5 +35,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     timeline.h \
+    timeline_player.h \
     tvideo_model.h \
     util.h

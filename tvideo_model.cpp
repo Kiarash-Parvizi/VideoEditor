@@ -10,10 +10,9 @@ TVideo_Model::TVideo_Model(QObject *parent)
 
 void TVideo_Model::CreateDefaultModel()
 {
-    Add({"John.The grates sdf Something cool", 600000, 100, 200});
-    Add({"John.The grates sdf Something cool", 800000, 100, 200});
-    Add({"Vid12", 1200000, 100, 200});
-    Add({"Gholam", 5000000, 100, 200});
+    Add({"E:/Movies/John.Wick.2014.720p.RERIP.Ganool.mkv", 600000, 100, 200, true});
+    Add({"E:/Movies/World.War.Z.2013.Unrated.Cut.720p.Ganool.mkv", 800000, 100, 200, false});
+    Add({"E:/Movies/Law.Abiding.Citizen.2009.720p_harmonydl.mkv", 1200000, 100, 200, true});
     //Add({"Gholam", 5000000, 100, 200});
 }
 
@@ -27,7 +26,7 @@ void TVideo_Model::inc_totalTime(ll v) {
     emit changed_totalTime();
 }
 
-void TVideo_Model::Add(const TVideo_Model::ModelItem& item) {
+void TVideo_Model::Add(const ModelItem& item) {
     // begin
     beginInsertRows(QModelIndex(),v.size(),v.size());
     //
@@ -37,7 +36,7 @@ void TVideo_Model::Add(const TVideo_Model::ModelItem& item) {
     endInsertRows();
 }
 
-void TVideo_Model::Insert(const TVideo_Model::ModelItem & item, int loc) {
+void TVideo_Model::Insert(const ModelItem & item, int loc) {
     // begin
     beginInsertRows(QModelIndex(),loc,loc);
     //
@@ -47,11 +46,12 @@ void TVideo_Model::Insert(const TVideo_Model::ModelItem & item, int loc) {
     endInsertRows();
 }
 
-void TVideo_Model::Insert_Buf(const TVideo_Model::ModelItem& item, ll vTime) {
+void TVideo_Model::Insert_Buf(const ModelItem& item, ll vTime) {
+    // I'll use the vTime later
     // begin
-    beginInsertRows(QModelIndex(),0,0);
+    beginInsertRows(QModelIndex(),v.size(),v.size());
     //
-    v.insert(0, item);
+    v.insert(v.end(), item);
     inc_totalTime(item.len);
     // end
     endInsertRows();
@@ -160,6 +160,8 @@ QVariant TVideo_Model::data(const QModelIndex &index, int role) const {
         return v[i].start;
     } if (role==end) {
         return v[i].end;
+    } if (role==hasAudio) {
+        return v[i].hasAudio;
     }
     if (role==Qt::DisplayRole) {
         return v[i]._source + " ("+ QString::number(v[i].len) +")";
@@ -173,6 +175,7 @@ QHash<int, QByteArray> TVideo_Model::roleNames() const {
     r[len]="len";
     r[start]="start";
     r[end]="end";
+    r[hasAudio]="hasAudio";
     return r;
 }
 
@@ -194,6 +197,8 @@ void TVideo_Model::setItemData2(int index, QVariant value, QString role) {
             roles.push_back(start);
         } else if (role=="end") {
             roles.push_back(end);
+        } else if (role=="hasAudio") {
+            roles.push_back(hasAudio);
         }
 
         roles.push_back(Qt::DisplayRole);

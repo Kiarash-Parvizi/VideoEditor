@@ -10,12 +10,52 @@ Item {
     property alias tl_ptr : tl_ptr
     function setMode() {
         visible = !visible
-        mediaSection.video.timeLineMode = visible
+        mediaSection.timeLineMode = visible
         soundEffects.play_space()
     }
     visible: false
     width: window.width; height: 98
     property real progressRatio: 0
+    // Play/Pause Button
+    Button {
+        id: playButton
+        anchors.bottom: parent.top; anchors.left: parent.left;
+        width: 50; height: 50
+        anchors.bottomMargin: 10; anchors.leftMargin: 6
+        Image {
+            id: playImg
+            visible: !mediaSection.videoPlus.isPlaying
+            anchors.centerIn: parent
+            source: "qrc:/resources/play-button_sm.png"
+        }
+        Image {
+            id: pauseImg
+            anchors.centerIn: parent
+            visible: !playImg.visible
+            source: "qrc:/resources/pause.png"
+        }
+        onClicked: {
+            focus: true
+            mediaSection.videoPlus.set_play()
+            soundEffects.play_click()
+            ///
+        }
+        onEnabledChanged: {
+            if (!enabled) focus = false
+        }
+        ToolTip.visible: hovered
+        ToolTip.text: playImg.visible ? "Play" : "Pause"
+    }
+    DropShadow {
+        anchors.fill: playButton
+        horizontalOffset: -3
+        verticalOffset: 3
+        radius: 8.0
+        samples: 17
+        color: "black"
+        source: playButton
+    }
+
     // bg
     Rectangle {
         color: "#101010"
@@ -37,6 +77,9 @@ Item {
         onMouseXChanged: {
             timeLine.progressRatio = mouseX/width
             tl_ptr.set_ptr2(mouseX)
+        }
+        onClicked: {
+            TL_Player.play_pos(mouseX/window.width * CppTimeLine.totalVidLen)
         }
     }
     // Data

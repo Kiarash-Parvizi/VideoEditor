@@ -7,7 +7,7 @@ Item {
     //BG
     Label {
         anchors.centerIn: parent
-        text: "NULL AUDIO BUFFER"
+        text: "NO ADDITIONAL AUDIO BUFFER"
         font: fontAssets.eliantoFontLoader.name
         color: "white"
     }

@@ -67,6 +67,7 @@ Item {
             onClicked: {
                 CppTimeLine.cut_interval(textField_from.text, textField_to.text)
                 timeLine.tl_ptr.reset()
+                soundEffects.play_done()
             }
         }
     }

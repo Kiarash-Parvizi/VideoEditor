@@ -116,6 +116,7 @@ Item {
                 parent.end   = textField_to.text
                 parent._source = mediaSection.video.fullVidSource
                 parent.hasData = true
+                soundEffects.play_done()
             }
         }
         property int start: 0
@@ -133,6 +134,7 @@ Item {
             onClicked: {
                 if (!parent.hasData) return
                 CppTimeLine.ins_Buf(parent._source, parent.start, parent.end, 0)
+                soundEffects.play_done()
             }
         }
     }

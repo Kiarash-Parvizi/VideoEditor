@@ -45,14 +45,14 @@ Component {
                 soundEffects.play_done()
             }
             MenuItem {
-                text: "Remove Video"
+                text: "Remove"
                 onClicked: {
                     soundEffects.play_done()
                     CppTimeLine.del_VBuf(model.index)
                 }
             }
             MenuItem {
-                text: "Remove Video+Audio"
+                text: "Mute Audio"
                 onClicked: {
                     soundEffects.play_done()
                     CppTimeLine.del_VBuf(model.index)

@@ -29,7 +29,7 @@ double TimeLine::calc_width(ll len, int winWidth) {
 }
 
 void TimeLine::ins_Buf(const QString& source, ll start, ll end, ll vTime) {
-    model->Insert_Buf({source, end-start, start, end}, vTime);
+    model->Insert_Buf({source, end-start, start, end, true}, vTime);
 }
 
 void TimeLine::del_VBuf(int idx) {
