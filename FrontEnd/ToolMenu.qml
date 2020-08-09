@@ -7,6 +7,7 @@ import "./Style"
 
 // ToolMenu
 Rectangle {
+    property alias intervalCutter: intervalCutter
     Layout.minimumWidth: window.width*0.3
     color: "#2C2C2C"
 
@@ -73,6 +74,7 @@ Rectangle {
             contentHeight: mainMenu.height * 0.9
             contentWidth: parent.width
             flickableDirection: Flickable.VerticalFlick
+            //maximumFlickVelocity: 1
             clip: true
 
             // Tools & Components
@@ -89,6 +91,12 @@ Rectangle {
                 }
 
                 IntervalCpy {
+                    id: intervalCpy
+                    Layout.topMargin: 16
+                    Layout.leftMargin: 22
+                }
+                IntervalCutter {
+                    id: intervalCutter
                     Layout.topMargin: 16
                     Layout.leftMargin: 22
                 }

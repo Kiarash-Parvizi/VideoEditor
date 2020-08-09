@@ -7,6 +7,7 @@ import QtGraphicalEffects 1.0
 Item {
     id: timeLine
     property alias tl_data: tl_data
+    property alias tl_ptr : tl_ptr
     function setMode() {
         visible = !visible
         mediaSection.video.timeLineMode = visible
@@ -24,38 +25,18 @@ Item {
     // mouse
     MouseArea {
         anchors.fill: parent
-        property int startX: 0
         property alias trace: tl_ptr.trace
         onPressed: {
-            startX = mouseX
             trace.x = mouseX
             trace.width = 0
-            tl_ptr.pointer.x = mouseX
+            tl_ptr.set_ptr1(mouseX)
         }
         onPressedChanged: {
             soundEffects.play_done_low()
         }
         onMouseXChanged: {
-            var coord_x = mouseX
-            tl_ptr.pointer2.x = mouseX
             timeLine.progressRatio = mouseX/width
-            if (coord_x < 0) {
-                coord_x = 0
-            } else if (coord_x > width) {
-                coord_x = width
-            }
-            //
-            //print("X: " + coord_x)
-            var d = coord_x - startX
-            if (d === 0) {
-                return
-            } if (d > 0) {
-                trace.x = startX
-                trace.width = d
-            } else {
-                trace.x = coord_x;
-                trace.width = -d
-            }
+            tl_ptr.set_ptr2(mouseX)
         }
     }
     // Data

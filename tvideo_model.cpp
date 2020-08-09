@@ -2,8 +2,9 @@
 #include <QModelIndex>
 #include<QDebug>
 
-TVideo_Model::TVideo_Model(QObject *parent) :
-    QAbstractListModel(parent) {
+TVideo_Model::TVideo_Model(QObject *parent)
+    : QAbstractListModel(parent)
+{
     CreateDefaultModel();
 }
 
@@ -16,12 +17,12 @@ void TVideo_Model::CreateDefaultModel()
     //Add({"Gholam", 5000000, 100, 200});
 }
 
-void TVideo_Model::set_totalTime(ull v) {
+void TVideo_Model::set_totalTime(ll v) {
     totalTime = v;
     emit changed_totalTime();
 }
 
-void TVideo_Model::inc_totalTime(ull v) {
+void TVideo_Model::inc_totalTime(ll v) {
     totalTime += v;
     emit changed_totalTime();
 }
@@ -36,7 +37,17 @@ void TVideo_Model::Add(const TVideo_Model::ModelItem& item) {
     endInsertRows();
 }
 
-void TVideo_Model::Insert(const TVideo_Model::ModelItem& item, ull vTime) {
+void TVideo_Model::Insert(const TVideo_Model::ModelItem & item, int loc) {
+    // begin
+    beginInsertRows(QModelIndex(),loc,loc);
+    //
+    v.insert(loc, item);
+    inc_totalTime(item.len);
+    // end
+    endInsertRows();
+}
+
+void TVideo_Model::Insert_Buf(const TVideo_Model::ModelItem& item, ll vTime) {
     // begin
     beginInsertRows(QModelIndex(),0,0);
     //
@@ -44,6 +55,15 @@ void TVideo_Model::Insert(const TVideo_Model::ModelItem& item, ull vTime) {
     inc_totalTime(item.len);
     // end
     endInsertRows();
+}
+
+void TVideo_Model::Rem_inclusive(int s, int e) {
+    beginRemoveRows(QModelIndex(), s, e);
+    for (int a = s; a <= e; a++) {
+        inc_totalTime(-v[a].len);
+    }
+    v.erase(v.begin()+s, v.begin()+e+1);
+    endRemoveRows();
 }
 
 void TVideo_Model::Del(int idx) {
@@ -54,6 +74,72 @@ void TVideo_Model::Del(int idx) {
     v.remove(idx);
     // end
     endRemoveRows();
+}
+
+void TVideo_Model::set_emitStateChanged_func(const std::function<void ()>& func) {
+    emitStateChanged = func;
+}
+
+void TVideo_Model::cut_interval(ll start, ll end)
+{
+    qDebug() << "start: " << start;
+    qDebug() << "end: " << end;
+    ll vTime = 0;
+    ll start_offset = -1, end_offset = -1;
+    bool op_ok = false;
+    // Find start section
+    int i, j;
+    for (i = 0; i < v.size(); i++) {
+        auto len = v[i].len;
+        auto s = vTime, e = vTime + len;
+        //
+        // Find end section:
+        if (start >= s && start <= e) {
+            for (j = i; j < v.size(); j++) {
+                auto len = v[j].len;
+                auto s = vTime, e = vTime + len;
+                if (end >= s && end <= e) {
+                    end_offset = e - end;
+                    op_ok = true;
+                    break;
+                }
+                //vTime++
+                vTime += len;
+            }
+            start_offset = start - s;
+            // Modify
+            if (!op_ok || (i == j && start_offset + end_offset == len)) {
+                return;
+            }
+            qDebug() << "make the cut";
+            qDebug() << "I: " << i;
+            qDebug() << "J: " << j;
+            if (i == j) {
+                qDebug() << "1>>";
+                inc_totalTime(-len+start_offset);
+                v[i].set_end(v[i].start + start_offset);
+                auto obj = v[i]; obj.set_start(obj.end - end_offset);
+                Insert(obj, i+1);
+            } else {
+                inc_totalTime(-len+start_offset);
+                v[i].set_end(v[i].start + start_offset);
+                //
+                inc_totalTime(-v[j].len+end_offset);
+                v[j].set_start(v[j].end - end_offset);
+                qDebug() << "2>>";
+                //
+                if (j-i > 1) {
+                    qDebug() << ">" << i << ", " << j << '\n';
+                    Rem_inclusive(i+1, j-1);
+                }
+            }
+            emitStateChanged();
+            // ------
+            break;
+        }
+        //vTime++
+        vTime += len;
+    }
 }
 
 int TVideo_Model::rowCount(const QModelIndex&) const {

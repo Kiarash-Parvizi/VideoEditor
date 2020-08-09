@@ -3,8 +3,9 @@
 
 #include <QAbstractListModel>
 #include<QObject>
+#include<functional>
 
-#define ull unsigned long long
+#define ll long long
 
 class TVideo_Model : public QAbstractListModel
 {
@@ -12,7 +13,16 @@ class TVideo_Model : public QAbstractListModel
 
     struct ModelItem {
         QString _source;
-        ull len, start, end;
+        ll len, start, end;
+        void calcLen() {
+            len = end - start;
+        }
+        void set_start(ll v) {
+            start = v; calcLen();
+        }
+        void set_end(ll v) {
+            end   = v; calcLen();
+        }
     };
     enum { name=Qt::UserRole, _source, len, start, end };
 
@@ -27,8 +37,16 @@ public:
 
     // Add Item
     void Add(const ModelItem&);
-    void Insert(const ModelItem&, ull vTime);
+    void Insert(const ModelItem&, int loc);
+    void Insert_Buf(const ModelItem&, ll vTime);
+    void Rem_inclusive(int s, int e);
     void Del(int idx);
+
+    // setup
+    void set_emitStateChanged_func(const std::function<void()>&);
+
+    // Edit
+    void cut_interval(ll start, ll end);
 
 signals:
     void changed_totalTime();
@@ -37,13 +55,14 @@ public slots:
     void setItemData2(int index, QVariant value, QString role);
 
 private:
-    ull totalTime = 0;
+    std::function<void()> emitStateChanged;
+    ll totalTime = 0;
     QVector<ModelItem> v;
 
 private:
     void CreateDefaultModel();
-    void set_totalTime(ull);
-    void inc_totalTime(ull);
+    void set_totalTime(ll);
+    void inc_totalTime(ll);
 };
 
 #endif // TVIDEO_MODEL_H

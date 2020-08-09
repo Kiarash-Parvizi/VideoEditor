@@ -18,7 +18,11 @@ Item {
 
         Repeater {
             id: repeater
+            property bool stateTrigger: CppTimeLine.stateTrigger
             onCountChanged: {
+                reCalc()
+            }
+            onStateTriggerChanged: {
                 reCalc()
             }
 

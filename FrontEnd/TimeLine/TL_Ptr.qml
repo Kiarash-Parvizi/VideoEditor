@@ -6,7 +6,39 @@ Item {
     property var trace: trace
     property var pointer : pointer
     property var pointer2: pointer2
+    property int startX: 0
     anchors.fill: parent
+    function reset() {
+        pointer.x = pointer2.x = 0
+        trace.x = 0; trace.width = 0
+    }
+
+    function set_ptr1(mouseX) {
+        startX = mouseX
+        pointer.x = mouseX
+    }
+    function set_ptr2(mouseX) {
+        var coord_x = mouseX
+        pointer2.x = mouseX
+        if (coord_x < 0) {
+            coord_x = 0
+        } else if (coord_x > width) {
+            coord_x = width
+        }
+        //
+        //print("X: " + coord_x)
+        var d = coord_x - startX
+        if (d === 0) {
+            return
+        } if (d > 0) {
+            trace.x = startX
+            trace.width = d
+        } else {
+            trace.x = coord_x;
+            trace.width = -d
+        }
+        toolMenu.intervalCutter.set(pointer.x/window.width * CppTimeLine.totalVidLen, pointer2.x/window.width * CppTimeLine.totalVidLen)
+    }
     // Pointer
     Rectangle {
         id: pointer

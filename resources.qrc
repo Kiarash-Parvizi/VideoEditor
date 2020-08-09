@@ -26,5 +26,6 @@
         <file>resources/audio/space.wav</file>
         <file>resources/timeLine.png</file>
         <file>resources/cpy.png</file>
+        <file>resources/circle.png</file>
     </qresource>
 </RCC>
