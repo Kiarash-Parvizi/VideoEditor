@@ -10,9 +10,9 @@ TVideo_Model::TVideo_Model(QObject *parent)
 
 void TVideo_Model::CreateDefaultModel()
 {
-    Add({"E:/Movies/John.Wick.2014.720p.RERIP.Ganool.mkv", 600000, 100, 200, true});
-    Add({"E:/Movies/World.War.Z.2013.Unrated.Cut.720p.Ganool.mkv", 800000, 100, 200, false});
-    Add({"E:/Movies/Law.Abiding.Citizen.2009.720p_harmonydl.mkv", 1200000, 100, 200, true});
+    //Add({"E:/Movies/John.Wick.2014.720p.RERIP.Ganool.mkv", 600000, 100, 200, true});
+    //Add({"E:/Movies/World.War.Z.2013.Unrated.Cut.720p.Ganool.mkv", 800000, 100, 200, false});
+    //Add({"E:/Movies/Law.Abiding.Citizen.2009.720p_harmonydl.mkv", 1200000, 100, 200, true});
     //Add({"Gholam", 5000000, 100, 200});
 }
 

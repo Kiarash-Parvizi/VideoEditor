@@ -25,7 +25,6 @@ Item {
     Connections {
         target: TL_Player
         onPlayBuffer: {
-            print("Fin");
             video.set_src(path, startPos, isRoot, extra_path, extra_startPos)
         }
     }

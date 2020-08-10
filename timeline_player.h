@@ -5,6 +5,7 @@
 #include <QString>
 #include <tvideo_model.h>
 #include <functional>
+#include <QDebug>
 #include <QTimer>
 
 #define ll long long
@@ -12,8 +13,10 @@
 struct Buf {
     QString path; ll startPos, len; int id;
     Buf next(const QVector<ModelItem>* v) {
-        if (id < v->size()) {
-            auto& obj = (*v)[id];
+        qDebug() << "next().call";
+        qDebug() << "v.size: " << v->size();
+        if (id+1 < v->size()) {
+            auto& obj = (*v)[id+1];
             return {obj._source, obj.start, obj.len, id+1};
         } else {
             return {"Err", -1, -1, -1};
@@ -35,6 +38,7 @@ signals:
 // private funcs
 private:
     Buf get_requested_buf(ll vTime);
+    void Rec(Buf buf, ll idx, ll wait);
 
 private:
     const QVector<ModelItem>* v;

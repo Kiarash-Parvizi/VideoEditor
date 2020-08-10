@@ -24,21 +24,15 @@ Item {
         anchors.bottomMargin: 10; anchors.leftMargin: 6
         Image {
             id: playImg
-            visible: !mediaSection.videoPlus.isPlaying
+            visible: true
             anchors.centerIn: parent
             source: "qrc:/resources/play-button_sm.png"
         }
-        Image {
-            id: pauseImg
-            anchors.centerIn: parent
-            visible: !playImg.visible
-            source: "qrc:/resources/pause.png"
-        }
         onClicked: {
             focus: true
-            mediaSection.videoPlus.set_play()
             soundEffects.play_click()
             ///
+            TL_Player.play_pos(tl_ptr.pointer2.x/window.width * CppTimeLine.totalVidLen)
         }
         onEnabledChanged: {
             if (!enabled) focus = false
@@ -77,9 +71,6 @@ Item {
         onMouseXChanged: {
             timeLine.progressRatio = mouseX/width
             tl_ptr.set_ptr2(mouseX)
-        }
-        onClicked: {
-            TL_Player.play_pos(mouseX/window.width * CppTimeLine.totalVidLen)
         }
     }
     // Data
