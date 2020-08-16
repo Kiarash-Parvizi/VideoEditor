@@ -110,7 +110,7 @@ Item {
         }
 
         function fast_forward(amount) {
-            if (hasVideo) {
+            if (hasVideo && visible) {
                 video.seek(video.position + amount)
             }
         }
@@ -143,9 +143,18 @@ Item {
 
         focus: !timeLineMode
 
+        Keys.onPressed: {
+            if (event.key == Qt.Key_F1) {
+                print("F1 : set all playbackRates to 1")
+                video.playbackRate = 1
+                videoPlus.set_playbackRate(1)
+            }
+        }
         Keys.onSpacePressed: {
-            print("space")
-            set_play()
+            if (visible) {
+                print("space")
+                set_play()
+            }
         }
         Keys.onLeftPressed: fast_forward(-5000)
         Keys.onRightPressed: fast_forward(5000)
@@ -209,6 +218,6 @@ Item {
         id: timeLineImg
         anchors.centerIn: video
         source: "qrc:/resources/timeLine.png"
-        visible: timeLineMode && !videoPlus.isPlaying
+        visible: timeLineMode && videoPlus.showLogo
     }
 }

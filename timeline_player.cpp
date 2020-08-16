@@ -5,18 +5,20 @@
 #include<chrono>
 
 void TimeLine_Player::Rec(Buf buf, ll exId, ll wait) {
-    if (exId != this->processIdx) return;
-    qDebug() << "Rec";
+    qDebug() << "Pec : " << buf.path;
     std::this_thread::sleep_for(std::chrono::milliseconds(wait));
+    qDebug() << "Rec : " << buf.path;
+    if (exId != this->processIdx) return;
     qDebug() << "id: " << exId << " | valid: " << this->processIdx;
     //
     qDebug() << "do now";
     emit playBuffer(buf.path, buf.startPos, false, "", 0);
+    if (buf.id == -1) return;
     //
     auto next = buf.next(this->v);
-    if (next.id != -1) {
-        std::thread(&TimeLine_Player::Rec, this, next, exId, buf.len).detach();
-    }
+    //if (next.id != -1) {
+    std::thread(&TimeLine_Player::Rec, this, next, exId, buf.len).detach();
+    //}
     qDebug() << "done now";
 }
 
@@ -24,15 +26,17 @@ void TimeLine_Player::play_pos(long long vTime) {
     auto buffer = get_requested_buf(vTime);
     auto next= buffer.next(v);
     emit playBuffer(buffer.path, buffer.startPos, true, next.path, next.startPos);
-    if (next.id == -1) {
-        return;
-    }
-    processIdx++;
+    //
+    change_process();
     //std::function<void()> lam;
     //std::function<void(Buf)> lam = [&](Buf buf) {
     //};
     std::thread(&TimeLine_Player::Rec, this, next, processIdx, buffer.len).detach();
     //invoke(lam, buffer.len-buffer.startPos, processIdx, &processIdx, next);
+}
+
+void TimeLine_Player::change_process() {
+    processIdx++;
 }
 
 TimeLine_Player::TimeLine_Player(TVideo_Model &model, QObject *parent)

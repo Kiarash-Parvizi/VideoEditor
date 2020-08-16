@@ -5,15 +5,39 @@ Item {
     property real vid_width : 0
     property real vid_height: 0
     property bool isPlaying: false
+    property bool isLoading: vids[cid].status === MediaPlayer.Loading //isPlaying && vids[cid].status !== MediaPlayer.Loaded
+    property bool showLogo: true
+    onIsLoadingChanged: {
+        print("isLoading: " + isLoading)
+    }
+
+    //
+    property int nid: 1
+    property int cid: 0
+    function inc_ids() { nid = (nid + 1) % 2; cid = (cid + 1) % 2; }
+    property var vids: [
+        video, video2
+    ]
     //
     function set_play() {
         if (isPlaying) {
-            video.vids[video.nid].pause()
+            vids[nid].pause()
             isPlaying = false
         } else {
-            video.vids[video.nid].play()
+            vids[nid].play()
             isPlaying = true
         }
+    }
+    function set_dis() {
+        TL_Player.change_process()
+        vids[cid].dis()
+        vids[nid].dis()
+        showLogo = true
+    }
+    //
+    function set_playbackRate(v) {
+        video.playbackRate = v
+        video2.playbackRate= v
     }
 
     function timeLineMode_changed() {
@@ -37,12 +61,6 @@ Item {
         width: vid_width; height: vid_height
         enabled: true
         visible: true
-        property int nid: 1
-        property int cid: 0
-        function inc_ids() { nid = (nid + 1) % 2; cid = (cid + 1) % 2; }
-        property var vids: [
-            video, video2
-        ]
         //
         property int startTime: 0
         function setup(src, _startTime) {
@@ -62,6 +80,14 @@ Item {
         }
 
         function set_src(next, startTime, isRoot, extra, extra_startTime) {
+            print("QNext: " + next)
+            if (next == "Err") {
+                print("Tail")
+                vids[nid].dis()
+                showLogo = true
+                return
+            }
+
             if (isRoot) {
                 vids[cid].setup(next, startTime)
                 vids[nid].setup(extra, extra_startTime)
@@ -69,9 +95,11 @@ Item {
                 vids[nid].setup(next, startTime)
             }
             vids[cid]._play()
+            showLogo = false
             isPlaying = true
             inc_ids()
         }
+
     }
     Video {
         id: video2
@@ -94,6 +122,14 @@ Item {
         function dis() {
             visible = false
             pause()
+        }
+    }
+
+    // MouseArea
+    MouseArea {
+        anchors.fill: video
+        onClicked: {
+            set_dis()
         }
     }
 }

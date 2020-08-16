@@ -15,9 +15,10 @@ struct Buf {
     Buf next(const QVector<ModelItem>* v) {
         qDebug() << "next().call";
         qDebug() << "v.size: " << v->size();
-        if (id+1 < v->size()) {
-            auto& obj = (*v)[id+1];
-            return {obj._source, obj.start, obj.len, id+1};
+        int nId = id+1;
+        if (nId < v->size()) {
+            auto& obj = (*v)[nId];
+            return {obj._source, obj.start, obj.len, nId};
         } else {
             return {"Err", -1, -1, -1};
         }
@@ -31,6 +32,7 @@ public:
     explicit TimeLine_Player(TVideo_Model& model, QObject *parent = nullptr);
 
     Q_INVOKABLE void play_pos(ll vTime);
+    Q_INVOKABLE void change_process();
 
 signals:
     void playBuffer(const QString& path, int startPos, bool isRoot, const QString& extra_path, int extra_startPos);

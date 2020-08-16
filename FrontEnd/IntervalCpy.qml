@@ -112,8 +112,8 @@ Item {
                 height: parent.height*0.7
             }
             onClicked: {
-                parent.start = textField_from.text
-                parent.end   = textField_to.text
+                parent.start = parseInt(textField_from.text)
+                parent.end   = parseInt(textField_to.text)
                 parent._source = mediaSection.video.fullVidSource
                 parent.hasData = true
                 soundEffects.play_done()

@@ -82,6 +82,7 @@ void TVideo_Model::set_emitStateChanged_func(const std::function<void ()>& func)
 
 void TVideo_Model::cut_interval(ll start, ll end)
 {
+    if (start == end) return;
     qDebug() << "start: " << start;
     qDebug() << "end: " << end;
     ll vTime = 0;

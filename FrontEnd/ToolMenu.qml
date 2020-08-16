@@ -42,6 +42,7 @@ Rectangle {
         z: 1
         onClicked: {
             timeLine.setMode()
+            TL_Player.change_process()
         }
     }
     DropShadow {

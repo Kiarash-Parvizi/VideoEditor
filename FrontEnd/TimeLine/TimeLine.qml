@@ -37,6 +37,7 @@ Item {
         onEnabledChanged: {
             if (!enabled) focus = false
         }
+        enabled: !mediaSection.videoPlus.isLoading
         ToolTip.visible: hovered
         ToolTip.text: playImg.visible ? "Play" : "Pause"
     }

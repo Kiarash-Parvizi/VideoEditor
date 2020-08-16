@@ -42,7 +42,7 @@ Item {
             readOnly: !mediaSection.video.hasSource
             validator: IntValidator {bottom: 1; top: mediaSection.video.duration}
         }
-        TextField{
+        TextField {
             id: textField_to
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: 80
@@ -68,6 +68,8 @@ Item {
                 CppTimeLine.cut_interval(textField_from.text, textField_to.text)
                 timeLine.tl_ptr.reset()
                 soundEffects.play_done()
+                mediaSection.videoPlus.set_dis()
+                TL_Player.change_process()
             }
         }
     }
