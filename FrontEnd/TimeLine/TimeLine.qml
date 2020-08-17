@@ -13,6 +13,16 @@ Item {
         mediaSection.timeLineMode = visible
         soundEffects.play_space()
     }
+    function reset() {
+        tl_ptr.reset()
+        reset_player()
+    }
+
+    function reset_player() {
+        mediaSection.videoPlus.set_dis()
+        TL_Player.change_process()
+    }
+
     visible: false
     width: window.width; height: 98
     property real progressRatio: 0
@@ -73,6 +83,13 @@ Item {
             timeLine.progressRatio = mouseX/width
             tl_ptr.set_ptr2(mouseX)
         }
+        onClicked: {
+            focus = true
+        }
+
+        // Controls
+        Keys.onLeftPressed: tl_ptr.inc_ptrs(-1)
+        Keys.onRightPressed: tl_ptr.inc_ptrs(1)
     }
     // Data
     TL_Data {

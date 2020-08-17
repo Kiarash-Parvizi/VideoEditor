@@ -24,6 +24,7 @@
         <file>FrontEnd/Util.qml</file>
         <file>FrontEnd/IntervalCutter.qml</file>
         <file>FrontEnd/VideoPlus.qml</file>
+        <file>FrontEnd/AudioCpy.qml</file>
     </qresource>
     <qresource lang="qml" prefix="/style"/>
 </RCC>

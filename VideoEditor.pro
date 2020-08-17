@@ -14,7 +14,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        effect.cpp \
         main.cpp \
+        taudio_model.cpp \
         timeline.cpp \
         timeline_player.cpp \
         tvideo_model.cpp
@@ -34,6 +36,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    effect.h \
+    taudio_model.h \
     timeline.h \
     timeline_player.h \
     tvideo_model.h \

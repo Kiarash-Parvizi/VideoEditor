@@ -15,10 +15,12 @@ Item {
     }
     Rectangle {
         anchors.right: parent.right;
-        width: 8; height: parent.height
+        anchors.rightMargin: -2
+        width: 9; height: parent.height
         gradient: Gradient {
             orientation: Gradient.Horizontal
             GradientStop { position: 0.0; color: "transparent" }
+            GradientStop { position: 0.9; color: "#121212" }
             GradientStop { position: 1.0; color: "#101010" }
         }
     }

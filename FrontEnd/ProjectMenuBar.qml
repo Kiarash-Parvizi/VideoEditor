@@ -46,6 +46,19 @@ MenuBar{
             }
         }
         Menu {
+            title: "Tools"
+            Action {
+                text: "Trim"
+                onTriggered: {
+                    trimWindow.show()
+                    soundEffects.play_done()
+                }
+            }
+            onOpened: {
+                soundEffects.play_done()
+            }
+        }
+        Menu {
             title: "Help"
             Action {
                 text: "About"

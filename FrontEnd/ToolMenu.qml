@@ -91,6 +91,11 @@ Rectangle {
                     })
                 }
 
+                AudioCpy {
+                    id: audioCpy
+                    Layout.topMargin: 16
+                    Layout.leftMargin: 22
+                }
                 IntervalCpy {
                     id: intervalCpy
                     Layout.topMargin: 16

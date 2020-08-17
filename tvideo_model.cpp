@@ -18,12 +18,12 @@ void TVideo_Model::CreateDefaultModel()
 
 void TVideo_Model::set_totalTime(ll v) {
     totalTime = v;
-    emit changed_totalTime();
+    emit changed_totalTime(totalTime);
 }
 
 void TVideo_Model::inc_totalTime(ll v) {
     totalTime += v;
-    emit changed_totalTime();
+    emit changed_totalTime(totalTime);
 }
 
 void TVideo_Model::Add(const ModelItem& item) {
@@ -74,6 +74,16 @@ void TVideo_Model::Del(int idx) {
     v.remove(idx);
     // end
     endRemoveRows();
+}
+
+void TVideo_Model::trim(long long minLen) {
+    for (int i = 0; i < v.size(); ) {
+        if (v[i].len < minLen) {
+            Del(i);
+        } else {
+            i++;
+        }
+    }
 }
 
 void TVideo_Model::set_emitStateChanged_func(const std::function<void ()>& func) {

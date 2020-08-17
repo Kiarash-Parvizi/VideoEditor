@@ -44,6 +44,9 @@ public:
     void Rem_inclusive(int s, int e);
     void Del(int idx);
 
+    //
+    void trim(ll minLen);
+
     const QVector<ModelItem>* getModelVec() {
         return &v;
     }
@@ -55,7 +58,7 @@ public:
     void cut_interval(ll start, ll end);
 
 signals:
-    void changed_totalTime();
+    void changed_totalTime(ll totalTime);
 
 public slots:
     void setItemData2(int index, QVariant value, QString role);

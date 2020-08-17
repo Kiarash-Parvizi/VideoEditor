@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
 
     // Model Extraction
     TVideo_Model tVideo_Model;
-    TimeLine timeLine(&tVideo_Model);
+    TAudio_Model tAudio_Model;
+    TimeLine timeLine(&tVideo_Model, &tAudio_Model);
     TimeLine_Player TL_Player(tVideo_Model);
     engine.rootContext()->setContextProperty("CppTimeLine", &timeLine);
     engine.rootContext()->setContextProperty("TL_Player", &TL_Player);

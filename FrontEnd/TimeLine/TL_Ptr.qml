@@ -11,8 +11,24 @@ Item {
     function reset() {
         pointer.x = pointer2.x = 0
         trace.x = 0; trace.width = 0
+        set_toolProps()
     }
 
+    function set_toolProps() {
+        toolMenu.intervalCutter.set(pointer.x/window.width * CppTimeLine.totalVidLen, pointer2.x/window.width * CppTimeLine.totalVidLen)
+    }
+
+    function inc_ptrs(mul) {
+        let amount = mul * window.width/400
+        let v1 = pointer.x  + amount
+        let v2 = pointer2.x + amount
+        if (v1 < 0 || v1 > window.width || v2 < 0 || v2 > window.width) return
+        pointer.x  = v1
+        pointer2.x = v2
+        trace.x += amount
+        //
+        set_toolProps()
+    }
     function set_ptr1(mouseX) {
         startX = mouseX
         pointer.x = mouseX
@@ -37,22 +53,23 @@ Item {
             trace.x = coord_x;
             trace.width = -d
         }
-        toolMenu.intervalCutter.set(pointer.x/window.width * CppTimeLine.totalVidLen, pointer2.x/window.width * CppTimeLine.totalVidLen)
+        //
+        set_toolProps()
     }
     // Pointer
     Rectangle {
         id: pointer
-        width: 1; height: parent.height; color: "#3060C0"; z: 2
+        width: 1; height: parent.height/2; color: "#3060C0"; z: 2
     }
     // Pointer2
     Rectangle {
         id: pointer2
-        width: 1; height: parent.height; color: "#3060C0"; z: 2
+        width: 1; height: parent.height/2; color: "#3060C0"; z: 2
     }
     // Trace
     Rectangle {
         id: trace
-        width: 2; height: parent.height; color: "#3060C0"; z: 2
+        width: 2; height: parent.height/2; color: "#3060C0"; z: 2
         opacity: 0.1
     }
     DropShadow {

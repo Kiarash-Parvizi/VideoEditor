@@ -22,21 +22,22 @@ Item {
         onPressed: {
             el = repeater.get_element(mouseX)
             if (el === null) return
-            startPosRatio = el.posRatio
+            startPosRatio = el.sPosRatio
             el.underMouse = true
             startMouseX = mouseX
         }
         onMouseXChanged: {
             if (el === null) return
             let dif = mouseX - startMouseX
-            el.posRatio = startPosRatio + (dif)/window.width
+            let v = startPosRatio + (dif)/window.width
+            CppTimeLine.set_aaudio_sPosRatio(el.idx, v)
         }
         onReleased: {
             if (el === null) return
             //
             let posOk = repeater.canHavePos(el)
             if (!posOk) {
-                el.posRatio = startPosRatio
+                CppTimeLine.set_aaudio_sPosRatio(el.idx, startPosRatio)
             } else {
                 soundEffects.play_done()
             }
@@ -54,7 +55,14 @@ Item {
         //
         function canHavePos(element) {
             let x1 = element.x, x1_p = element.x+element.width
-            if (x1 < 0 || x1_p > window.width) return false
+            if (x1 < 0) {
+                CppTimeLine.set_aaudio_sPosRatio(element.idx, 0)
+            } else if (x1_p > window.width) {
+                let v = 1 - element.width/window.width
+                CppTimeLine.set_aaudio_sPosRatio(element.idx, v)
+            }
+            x1 = element.x; x1_p = element.x+element.width
+
             //
             for (let i = 0; i < count; i++) {
                 let el = itemAt(i)
@@ -78,26 +86,29 @@ Item {
         }
 
         ///
-        model: ListModel {
-            ListElement {
-                posRatio: 0.1
-                widRatio: 0.2
-                source: "something good"
-            }
-            ListElement {
-                posRatio: 0.1
-                widRatio: 0.1
-                source: "hey you mate"
-            }
-        }
+        model: CppTimeLine.aModel
 
         delegate: Rectangle {
             color: "#303030"
-            property real posRatio: model.posRatio
-            property string mediaName: util.getMediaName(model.source, false)
+            property int idx: model.index
+            property real sPosRatio: model.sPosRatio
+            property string mediaName: util.getMediaName(model._source, false)
             property bool underMouse: false
-            x: posRatio * window.width
-            height: parent.height; width: model.widRatio * window.width
+            x: sPosRatio * window.width
+            height: parent.height;
+            width: {
+                if (CppTimeLine.totalVidLen > 0) {
+                    visible = true
+                    let ratio = model.len/CppTimeLine.totalVidLen
+                    if (ratio > 1) {
+                        visible = false
+                        return 0;
+                    }
+                    return ratio * window.width
+                }
+                visible = false
+                return 0;
+            }
             TextField {
                 readOnly: true
                 enabled: false
