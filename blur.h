@@ -7,8 +7,8 @@ class Blur : public Effect {
 public:
     Blur(int x, int y, int w, int h);
     ~Blur();
-    const QString& get_command() override;
-    void calc_command(int i1, int i2);
+    QString get_command(int i1, int i2) const override;
+    Effect* clone() override;
 private:
     int x, y, w, h;
 };

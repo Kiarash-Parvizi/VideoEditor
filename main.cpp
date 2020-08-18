@@ -5,6 +5,7 @@
 
 #include <timeline.h>
 #include <timeline_player.h>
+#include <vprocess.h>
 #include <QIcon>
 
 int main(int argc, char *argv[])
@@ -31,8 +32,10 @@ int main(int argc, char *argv[])
     TAudio_Model tAudio_Model;
     TimeLine timeLine(&tVideo_Model, &tAudio_Model);
     TimeLine_Player TL_Player(tVideo_Model);
+    VProcess vProcess(&timeLine);
     engine.rootContext()->setContextProperty("CppTimeLine", &timeLine);
     engine.rootContext()->setContextProperty("TL_Player", &TL_Player);
+    engine.rootContext()->setContextProperty("VProcess", &vProcess);
 
     const QUrl url(QStringLiteral("qrc:/FrontEnd/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
