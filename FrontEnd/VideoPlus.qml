@@ -2,6 +2,25 @@ import QtQuick 2.12
 import QtMultimedia 5.12
 
 Item {
+    property var medScale: {
+        //let reso = vids[nid].metaData.resolution
+        ////print(vids[nid].metaData.)
+        //if (typeof resolution === 'undefined') {
+        //    print("undef")
+        //    print("reso: " + reso.width)
+        //    return [0, 0]
+        //}
+        //let w = reso.width, h = reso.height
+        //let vid_ratio = w/h, con_ratio = width/h
+        //if (vid_ratio > con_ratio) {
+        //    let r = width / w
+        //    return [width, h*r]
+        //} else {
+        //    let r = height / h
+        //    return [w*r, height]
+        //}
+        return [0, 0]
+    }
     property real vid_width : 0
     property real vid_height: 0
     property bool isPlaying: false
@@ -10,7 +29,9 @@ Item {
     onIsLoadingChanged: {
         print("isLoading: " + isLoading)
     }
-
+    //
+    function calc_medScale() {
+    }
     //
     property int nid: 1
     property int cid: 0
@@ -28,6 +49,13 @@ Item {
             isPlaying = true
         }
     }
+    function set_pause() {
+        if (isPlaying) {
+            vids[nid].pause()
+            isPlaying = false
+        }
+    }
+
     function set_dis() {
         TL_Player.change_process()
         vids[cid].dis()
@@ -129,7 +157,9 @@ Item {
     MouseArea {
         anchors.fill: video
         onClicked: {
-            set_dis()
+            //set_dis()
+            set_pause()
+            TL_Player.change_process()
         }
     }
 }

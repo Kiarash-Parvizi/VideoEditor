@@ -97,6 +97,7 @@ ApplicationWindow {
                                     CppTimeLine.trim(parseInt(minLen))
                                     timeLine.reset()
                                 } else {
+                                    CppTimeLine.trim_aaudio(parseInt(minLen))
                                 }
                                 soundEffects.play_done()
                             }

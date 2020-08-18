@@ -173,13 +173,6 @@ Item {
             video.hasSource = true
         }
 
-        // Mouse-Box
-        MouseBox {
-            id: mouseBox
-            width: parent.mediaWidth; height: parent.mediaHeight
-            anchors.centerIn: parent
-            visible: true
-        }
         Component.onCompleted: {
             //playbackRate = 1
         }
@@ -193,6 +186,13 @@ Item {
         visible: timeLineMode
         anchors.centerIn: parent
     }
+    // Mouse-Box
+    //MouseBox {
+    //    id: mouseBox; z: 30
+    //    width: videoPlus.medScale[0]; height: videoPlus.medScale[1]
+    //    anchors.centerIn: parent
+    //    visible: true
+    //}
 
     // ICONS
     Image {

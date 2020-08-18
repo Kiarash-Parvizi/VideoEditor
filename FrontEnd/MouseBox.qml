@@ -75,6 +75,9 @@ Item {
                 redRect.height = -h
             }
         }
+        onReleased: {
+            // set-tool-Props
+        }
 
         onContainsMouseChanged: {
         }

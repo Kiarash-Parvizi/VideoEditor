@@ -5,15 +5,6 @@
 TVideo_Model::TVideo_Model(QObject *parent)
     : QAbstractListModel(parent)
 {
-    CreateDefaultModel();
-}
-
-void TVideo_Model::CreateDefaultModel()
-{
-    //Add({"E:/Movies/John.Wick.2014.720p.RERIP.Ganool.mkv", 600000, 100, 200, true});
-    //Add({"E:/Movies/World.War.Z.2013.Unrated.Cut.720p.Ganool.mkv", 800000, 100, 200, false});
-    //Add({"E:/Movies/Law.Abiding.Citizen.2009.720p_harmonydl.mkv", 1200000, 100, 200, true});
-    //Add({"Gholam", 5000000, 100, 200});
 }
 
 void TVideo_Model::set_totalTime(ll v) {
@@ -57,13 +48,18 @@ void TVideo_Model::Insert_Buf(const ModelItem& item, ll vTime) {
     endInsertRows();
 }
 
-void TVideo_Model::Rem_inclusive(int s, int e) {
+// returns the total removed time in ms
+ll TVideo_Model::Rem_inclusive(int s, int e, bool useIncFunc) {
     beginRemoveRows(QModelIndex(), s, e);
+    ll remTime = 0;
     for (int a = s; a <= e; a++) {
-        inc_totalTime(-v[a].len);
+        if (useIncFunc)
+            inc_totalTime(-v[a].len);
+        remTime += v[a].len;
     }
     v.erase(v.begin()+s, v.begin()+e+1);
     endRemoveRows();
+    return remTime;
 }
 
 void TVideo_Model::Del(int idx) {
@@ -76,7 +72,23 @@ void TVideo_Model::Del(int idx) {
     endRemoveRows();
 }
 
-void TVideo_Model::trim(long long minLen) {
+int TVideo_Model::getIdx(ll vtime)
+{
+    ll vTime = 0;
+    // Find start section
+    for (int i = 0; i < v.size(); i++) {
+        auto len = v[i].len;
+        auto s = vTime, e = vTime + len;
+        //
+        // Find end section:
+        if (vtime >= s && vtime <= e) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void TVideo_Model::trim(ll minLen) {
     for (int i = 0; i < v.size(); ) {
         if (v[i].len < minLen) {
             Del(i);
@@ -84,6 +96,11 @@ void TVideo_Model::trim(long long minLen) {
             i++;
         }
     }
+}
+
+void TVideo_Model::add_blur(ll vTime, int x, int y, int w, int h) {
+    int idx = getIdx(vTime);
+    v[idx].effects.push_back(new Blur(x, y, w, h));
 }
 
 void TVideo_Model::set_emitStateChanged_func(const std::function<void ()>& func) {
@@ -127,22 +144,26 @@ void TVideo_Model::cut_interval(ll start, ll end)
             qDebug() << "J: " << j;
             if (i == j) {
                 qDebug() << "1>>";
-                inc_totalTime(-len+start_offset);
-                v[i].set_end(v[i].start + start_offset);
                 auto obj = v[i]; obj.set_start(obj.end - end_offset);
                 Insert(obj, i+1);
-            } else {
+                v[i].set_end(v[i].start + start_offset);
+                // inc totalTime
                 inc_totalTime(-len+start_offset);
+            } else {
+                ll remT1 = -len+start_offset;
                 v[i].set_end(v[i].start + start_offset);
                 //
-                inc_totalTime(-v[j].len+end_offset);
+                ll remT2 = -v[j].len+end_offset;
                 v[j].set_start(v[j].end - end_offset);
                 qDebug() << "2>>";
                 //
+                ll remT_series = 0;
                 if (j-i > 1) {
                     qDebug() << ">" << i << ", " << j << '\n';
-                    Rem_inclusive(i+1, j-1);
+                    remT_series = Rem_inclusive(i+1, j-1, false);
                 }
+                // inc totalTime
+                inc_totalTime(remT1+remT2-remT_series);
             }
             emitStateChanged();
             // ------

@@ -13,6 +13,26 @@ void TAudio_Model::add_buf(const QString& src, long long medStart, long long med
     Add(item);
 }
 
+void TAudio_Model::rem_buf(int idx) {
+    // begin
+    beginRemoveRows(QModelIndex(),idx,idx);
+    //
+    inc_totLen(-v[idx].len);
+    v.remove(idx);
+    // end
+    endRemoveRows();
+}
+
+void TAudio_Model::trim(ll minLen) {
+    for (int i = 0; i < v.size(); ) {
+        if (v[i].len < minLen) {
+            rem_buf(i);
+        } else {
+            i++;
+        }
+    }
+}
+
 TAudio_Model::TAudio_Model(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -81,11 +101,62 @@ void TAudio_Model::setItemData2(int index, QVariant value, const QString& role) 
 }
 
 void TAudio_Model::set_totalVideoLen(long long v) {
+    auto pre = totVideoLen;
+    // asn
     totVideoLen = v;
+    //
+    if (totVideoLen < pre) {
+        checkPlace();
+    }
+}
+
+void TAudio_Model::rearrange() {
+    qDebug() << "reARRANGE";
+    double cp = 0; int i = 0;
+    for (auto& el : v) {
+        double lenR = (double)el.len/(double)totVideoLen;
+        //
+        el.sPosRatio = cp;
+        //
+        i++; cp += lenR;
+    }
+    emit dataChanged(createIndex(0,0), createIndex(v.size()-1,0), {sPosRatio});
 }
 
 bool TAudio_Model::placedOk() {
+    for (int i = 0; i < v.size(); i++) {
+        const auto& item = v[i];
+        double rx1   = item.sPosRatio;
+        double rx1_p = rx1 + (double)item.len/(double)totVideoLen;
+        if (rx1 < 0 || rx1 > 1 || rx1_p > 1) {
+            return false;
+        }
+        // check agains all others
+        for (int j = i+1; j < v.size(); j++) {
+            const auto& item2 = v[j];
+            double rx2   = item2.sPosRatio;
+            double rx2_p = rx2 + (double)item2.len/(double)totVideoLen;
+            if (	(rx2 > rx1 && rx2 < rx1_p)
+                ||	(rx2_p > rx1 && rx2_p < rx1_p)
+                ||	(rx2_p >= rx1_p && rx2 <= rx1)
+            ){
+                qDebug() << "(" << rx1 << ", " << rx1_p << ") . (" << rx2 << ", " << rx2_p << ")";
+                return false;
+            }
+        }
+    }
     return true;
+}
+
+void TAudio_Model::checkPlace() {
+    qDebug() << "totLen: " << totLen << " | vidLen" << totVideoLen;
+    while(totLen > totVideoLen) {
+        if (!v.size()) return;
+        rem_buf(0);
+    }
+    if (!placedOk()) {
+        rearrange();
+    }
 }
 
 double TAudio_Model::calcPlace(long long len) {
@@ -139,15 +210,11 @@ void TAudio_Model::Add(const TAudio_Model::ModelItem& item) {
     beginInsertRows(QModelIndex(),v.size(),v.size());
     //
     v.push_back(item);
+    inc_totLen(item.len);
     // end
     endInsertRows();
 }
 
-void TAudio_Model::Del(int idx) {
-    // begin
-    beginRemoveRows(QModelIndex(),idx,idx);
-    //
-    v.remove(idx);
-    // end
-    endRemoveRows();
+void TAudio_Model::inc_totLen(ll amount) {
+    totLen += amount;
 }

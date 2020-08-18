@@ -12,7 +12,7 @@
 
 struct Buf {
     QString path; ll startPos, len; int id;
-    Buf next(const QVector<ModelItem>* v) {
+    Buf next(const QVector<TVideo_Model::ModelItem>* v) {
         qDebug() << "next().call";
         qDebug() << "v.size: " << v->size();
         int nId = id+1;
@@ -43,7 +43,7 @@ private:
     void Rec(Buf buf, ll idx, ll wait);
 
 private:
-    const QVector<ModelItem>* v;
+    const QVector<TVideo_Model::ModelItem>* v;
     TVideo_Model& model;
     ll processIdx = 0;
 };

@@ -46,12 +46,24 @@ void TimeLine::add_aaudioBuf(const QString &src, long long medStart, long long m
     aModel->add_buf(src, medStart, medEnd);
 }
 
+void TimeLine::rem_aaudioBuf(int idx) {
+    aModel->rem_buf(idx);
+}
+
 void TimeLine::set_aaudio_sPosRatio(int idx, double val) {
     aModel->set_sPosRatio(idx, val);
 }
 
-void TimeLine::trim(long long minLen) {
+void TimeLine::add_blur(long long vTime, int x, int y, int w, int h) {
+    model->add_blur(vTime, x, y, w, h);
+}
+
+void TimeLine::trim(ll minLen) {
     model->trim(minLen);
+}
+
+void TimeLine::trim_aaudio(ll minLen) {
+    aModel->trim(minLen);
 }
 
 void TimeLine::cut_interval(ll start, ll end) {

@@ -27,5 +27,10 @@
         <file>resources/timeLine.png</file>
         <file>resources/cpy.png</file>
         <file>resources/circle.png</file>
+        <file>resources/speaker_col.png</file>
+        <file>resources/speaker_col_16.png</file>
+        <file>resources/brackets-bg.png</file>
+        <file>resources/drop.png</file>
+        <file>resources/select.png</file>
     </qresource>
 </RCC>

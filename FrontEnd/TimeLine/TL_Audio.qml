@@ -19,21 +19,37 @@ Item {
         property var el: null
         property real startPosRatio: 0
         property real startMouseX: 0
+        property bool drag: false
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: {
+            if (el === null) return
+            if (mouse.button === Qt.RightButton) {
+                el.onRightClick()
+            }
+        }
+        //
         onPressed: {
             el = repeater.get_element(mouseX)
             if (el === null) return
-            startPosRatio = el.sPosRatio
-            el.underMouse = true
-            startMouseX = mouseX
+            //
+            if (mouse.button === Qt.RightButton) {
+                drag = false
+            } else {
+                startPosRatio = el.sPosRatio
+                el.underMouse = true
+                startMouseX = mouseX
+                //
+                drag = true;
+            }
         }
         onMouseXChanged: {
-            if (el === null) return
+            if (!drag || el === null) return
             let dif = mouseX - startMouseX
             let v = startPosRatio + (dif)/window.width
             CppTimeLine.set_aaudio_sPosRatio(el.idx, v)
         }
         onReleased: {
-            if (el === null) return
+            if (!drag || el === null) return
             //
             let posOk = repeater.canHavePos(el)
             if (!posOk) {
@@ -94,6 +110,11 @@ Item {
             property real sPosRatio: model.sPosRatio
             property string mediaName: util.getMediaName(model._source, false)
             property bool underMouse: false
+            //
+            function onRightClick() {
+                contextMenu.open()
+            }
+            //
             x: sPosRatio * window.width
             height: parent.height;
             width: {
@@ -117,6 +138,20 @@ Item {
                 text: mediaName
                 ToolTip.visible: underMouse
                 ToolTip.text: text
+            }
+            Menu {
+                id: contextMenu
+                onOpened: {
+                    soundEffects.play_done()
+                }
+                MenuItem {
+                    text: "Remove"
+                    onClicked: {
+                        soundEffects.play_done()
+                        CppTimeLine.rem_aaudioBuf(idx)
+                    }
+                }
+                z: 20
             }
         }
     }

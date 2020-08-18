@@ -24,7 +24,7 @@ Item {
         Image {
             Layout.preferredHeight: 20
             Layout.preferredWidth: 20
-            source: "qrc:/resources/speaker.png"
+            source: "qrc:/resources/speaker_col.png"
         }
         Button {
             Layout.leftMargin: -5

@@ -48,6 +48,10 @@ public:
 
     // Add Item
     void add_buf(const QString& src, ll medStart, ll medEnd);
+    void rem_buf(int idx);
+
+    //
+    void trim(ll minLen);
 
     //
     explicit TAudio_Model(QObject *parent = nullptr);
@@ -61,12 +65,14 @@ public slots:
     void set_totalVideoLen(ll v);
 
 private:
-    void arrange();
+    void rearrange();
     bool placedOk();
+    void checkPlace();
     double calcPlace(ll len);
     //
     void Add(const TAudio_Model::ModelItem&);
-    void Del(int idx);
+    //
+    void inc_totLen(ll amount);
 
 private:
     QVector<ModelItem> v;

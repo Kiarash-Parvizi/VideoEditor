@@ -4,23 +4,10 @@
 #include <QAbstractListModel>
 #include<QObject>
 #include<functional>
+#include<Effects_List.h>
 
 #define ll long long
 
-struct ModelItem {
-    QString _source;
-    ll len, start, end;
-    bool hasAudio;
-    void calcLen() {
-        len = end - start;
-    }
-    void set_start(ll v) {
-        start = v; calcLen();
-    }
-    void set_end(ll v) {
-        end   = v; calcLen();
-    }
-};
 
 class TVideo_Model : public QAbstractListModel
 {
@@ -28,6 +15,25 @@ class TVideo_Model : public QAbstractListModel
 
     enum { name=Qt::UserRole, _source, len, start, end, hasAudio };
 
+public:
+    // ModelItem
+    struct ModelItem {
+        QString _source;
+        ll len, start, end;
+        bool hasAudio = true;
+        //
+        QVector<Effect*> effects;
+        // Funcs
+        void calcLen() {
+            len = end - start;
+        }
+        void set_start(ll val) {
+            start = val; calcLen();
+        }
+        void set_end(ll val) {
+            end   = val; calcLen();
+        }
+    };
 public:
     explicit TVideo_Model(QObject *parent = nullptr);
 
@@ -41,11 +47,15 @@ public:
     void Add(const ModelItem&);
     void Insert(const ModelItem&, int loc);
     void Insert_Buf(const ModelItem&, ll vTime);
-    void Rem_inclusive(int s, int e);
+    ll Rem_inclusive(int s, int e, bool useIncFunc = true);
     void Del(int idx);
+
+    // util
+    int getIdx(ll vtime);
 
     //
     void trim(ll minLen);
+    void add_blur(ll vTime, int x, int y, int w, int h);
 
     const QVector<ModelItem>* getModelVec() {
         return &v;

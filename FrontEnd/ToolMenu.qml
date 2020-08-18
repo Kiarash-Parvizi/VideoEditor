@@ -93,7 +93,7 @@ Rectangle {
 
                 AudioCpy {
                     id: audioCpy
-                    Layout.topMargin: 16
+                    Layout.topMargin: 24
                     Layout.leftMargin: 22
                 }
                 IntervalCpy {
@@ -106,13 +106,18 @@ Rectangle {
                     Layout.topMargin: 16
                     Layout.leftMargin: 22
                 }
-
-                Rectangle {
-                    color: "red"
-                    width: 10
-                    height: 10
-                    function reset() {}
+                MouseBox_Data {
+                    id: mouseBox_data
+                    Layout.topMargin: 16
+                    Layout.leftMargin: 22
                 }
+
+                //Rectangle {
+                //    color: "red"
+                //    width: 10
+                //    height: 10
+                //    function reset() {}
+                //}
             }
         }
 

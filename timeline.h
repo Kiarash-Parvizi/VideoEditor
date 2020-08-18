@@ -34,12 +34,17 @@ public:
     Q_INVOKABLE void del_VBuf(int idx);
     //
     Q_INVOKABLE void add_aaudioBuf(const QString& src, ll medStart, ll medEnd);
+    Q_INVOKABLE void rem_aaudioBuf(int idx);
     Q_INVOKABLE void set_aaudio_sPosRatio(int idx, double val);
+
+    //Effects
+    Q_INVOKABLE void add_blur(ll vTime, int x, int y, int w, int h);
 
     //
     //Q_INVOKABLE void add_ABuf(const QString& source, ll start, ll end);
     //Q_INVOKABLE void add_effect();
     Q_INVOKABLE void trim(ll minLen);
+    Q_INVOKABLE void trim_aaudio(ll minLen);
 
     //Edit
     Q_INVOKABLE void cut_interval(ll start, ll end);
