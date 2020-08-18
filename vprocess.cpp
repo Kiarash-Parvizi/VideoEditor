@@ -1,11 +1,12 @@
 #include "vprocess.h"
 
 #include<QSet>
+#include<CmdExecution.h>
 
 VChunk::VChunk() {}
 
 VChunk::VChunk(int idx, const QString& vid_src, ll vStart, ll vEnd,
-               const QString& aud_src, ll aStart, ll aEnd, const QVector<Effect*> efct)
+               const QString& aud_src, ll aStart, ll aEnd, const QVector<Effect*>& efct)
     : idx(idx)
     , vid_src(vid_src)
     , vStart(vStart)
@@ -57,7 +58,7 @@ VProcess::VProcess(TimeLine *timeline, QObject* parent)
 {
 }
 
-void VProcess::ExportVideo(const QString& finalFFCommand) {
+void VProcess::exportVideo(const QString& finalFFCommand) {
     // reset
     reset();
     // vchunk-processing
@@ -65,7 +66,13 @@ void VProcess::ExportVideo(const QString& finalFFCommand) {
     // command
     auto ffCommand = gen_ff_command(finalFFCommand);
     // exe
-    system(ffCommand.toUtf8().constData());
+    qDebug() << "COMMAND: " << (ffCommand.toUtf8() + " && Pause").constData();
+    //system("cmd.exe /c dir c:\\");
+    exec((ffCommand.toUtf8()).constData());
+}
+
+void VProcess::set_ffPath(const QString &path) {
+    ffPath = path;
 }
 
 void VProcess::reset() {
@@ -79,6 +86,9 @@ void VProcess::register_data(const QString &src) {
 }
 
 void VProcess::calc_vchunks_fromVidItems() {
+    int i = 0;for(const auto& v : *timeline->model->getModelVec()) {
+        vchunks.push_back(VChunk(i, v._source, v.start, v.end, v._source, v.start, v.end, v.effects));
+    ++i;}
 }
 
 void VProcess::merge_vchunks_aaudio() {
@@ -90,7 +100,7 @@ void VProcess::calc_vchuncks() {
 }
 
 QString VProcess::gen_init_command() {
-    QString ret = "ffmpeg ";
+    QString ret = ffPath + " ";
     QSet<QString> Set;
     for (const auto& v : vchunks) {
         Set.insert(v.vid_src);

@@ -58,9 +58,10 @@ signals:
     void changed_aModel();
     void changed_stateTrigger();
 
-private:
+public:
     TVideo_Model* model;
     TAudio_Model* aModel;
+private:
     bool stateTrigger;
 };
 

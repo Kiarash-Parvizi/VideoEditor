@@ -7,6 +7,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 
+import "./Window"
 import "./TimeLine"
 import "./Style"
 import "./RC"
@@ -38,74 +39,12 @@ ApplicationWindow {
 
 
     // Dialogs + extra-windows // ------------
-    Window {
+    ExportWindow {
         id: exportWindow
-        title: "Export"
-        minimumWidth: window.minimumWidth*0.4; minimumHeight: window.minimumHeight*0.4
-        maximumWidth: window.maximumWidth*0.41; maximumHeight: window.maximumHeight*0.42
-        Rectangle {
-            anchors.fill: parent
-            color: "#101010"
-        }
     }
-    Window {
+
+    TrimWindow {
         id: trimWindow
-        title: "Trim"
-        minimumWidth: window.minimumWidth*0.4; minimumHeight: window.minimumHeight*0.4
-        maximumWidth: window.maximumWidth*0.41; maximumHeight: window.maximumHeight*0.42
-        Rectangle {
-            anchors.fill: parent
-            color: "#101010"
-        }
-        Frame {
-            //anchors.centerIn: parent
-            padding: 30
-            anchors.fill: parent
-            anchors.leftMargin: 30; anchors.rightMargin : 30
-            anchors.topMargin : 30; anchors.bottomMargin: 30
-            ColumnLayout {
-                spacing: 20
-                ComboBox {
-                    id: trimCombo
-                    currentIndex: 0
-                    model: ListModel {
-                        ListElement { text: "Videos" }
-                        ListElement { text: "Additional Audios" }
-                    }
-                    onCurrentIndexChanged: {
-                        soundEffects.play_done()
-                    }
-                    Component.onCompleted: {
-                        Layout.preferredWidth = width + 12
-                    }
-                }
-                Row {
-                    spacing: 2
-                    TextField {
-                        id: trim_textField_minLen
-                        width: 200; height: 40
-                        placeholderText: "minimum length (in ms)"
-                        validator: IntValidator {bottom: 1; top: mediaSection.video.duration}
-                    }
-                    Button {
-                        property alias minLen: trim_textField_minLen.text
-                        width: 70; height: 40
-                        text: "Trim"
-                        onClicked: {
-                            if (minLen.length > 0) {
-                                if (trimCombo.currentIndex == 0) {
-                                    CppTimeLine.trim(parseInt(minLen))
-                                    timeLine.reset()
-                                } else {
-                                    CppTimeLine.trim_aaudio(parseInt(minLen))
-                                }
-                                soundEffects.play_done()
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     FileDialog {
@@ -115,9 +54,43 @@ ApplicationWindow {
         selectMultiple: true
         property var callback: function() {}
         onAccepted: {
-            callback(fileUrls)
+            let urls = new Array(fileUrls.length)
+            for (let i = 0; i < fileUrls.length; i++) urls[i] = fileUrls[i].toString().substring(8)
+            //for (let i = 0; i < urls.length; i++) print(":->" + urls[i])
+            callback(urls)
         }
         function getFiles(callBack) {
+            callback = callBack
+            open()
+        }
+    }
+    FileDialog {
+        id: fileDialog_single
+        title: "Please choose your file"
+        folder: shortcuts.home
+        selectMultiple: false
+        property var callback: function() {}
+        onAccepted: {
+            callback(fileUrl.toString().substring(8))
+        }
+        function getFile(callBack, dialogTitle = "Please choose your file") {
+            title = dialogTitle
+            callback = callBack
+            open()
+        }
+    }
+    FileDialog {
+        id: folderDialog
+        title: "Please choose your folder"
+        selectFolder: true
+        selectMultiple: false
+        folder: shortcuts.home
+        property var callback: function() {}
+        onAccepted: {
+            print("folder: " + folder.toString().substring(8))
+            callback(folder.toString(8).substring(8))
+        }
+        function getFolder(callBack) {
             callback = callBack
             open()
         }

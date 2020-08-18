@@ -52,6 +52,10 @@ public:
 
     //
     void trim(ll minLen);
+    //
+    const QVector<ModelItem>* getModelVec() const {
+        return &v;
+    }
 
     //
     explicit TAudio_Model(QObject *parent = nullptr);

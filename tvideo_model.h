@@ -57,7 +57,7 @@ public:
     void trim(ll minLen);
     void add_blur(ll vTime, int x, int y, int w, int h);
 
-    const QVector<ModelItem>* getModelVec() {
+    const QVector<ModelItem>* getModelVec() const {
         return &v;
     }
 

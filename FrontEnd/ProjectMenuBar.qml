@@ -67,6 +67,16 @@ MenuBar{
                     soundEffects.play_done()
                 }
             }
+            Action {
+                text: "set ffPath"
+                function set_ffPath(path) {
+                    VProcess.set_ffPath(path)
+                    soundEffects.play_done()
+                }
+                onTriggered: {
+                    fileDialog_single.getFile(set_ffPath, "path to ffmpeg")
+                }
+            }
             onOpened: {
                 soundEffects.play_done()
             }

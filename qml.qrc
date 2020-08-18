@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>FrontEnd/main.qml</file>
+        <file>FrontEnd/Window/TrimWindow.qml</file>
+        <file>FrontEnd/Window/ExportWindow.qml</file>
         <file>FrontEnd/RC/SoundEffects.qml</file>
         <file>FrontEnd/Style/SciButton.qml</file>
         <file>FrontEnd/ItemMenu.qml</file>

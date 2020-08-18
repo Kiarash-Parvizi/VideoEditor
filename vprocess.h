@@ -8,7 +8,7 @@ struct VChunk {
     int idx;
     // Const
     VChunk();
-    VChunk(int idx, const QString& vid_src, ll vStart, ll vEnd, const QString& aud_src, ll aStart, ll aEnd, QVector<Effect*>);
+    VChunk(int idx, const QString& vid_src, ll vStart, ll vEnd, const QString& aud_src, ll aStart, ll aEnd, const QVector<Effect*>&);
     ~VChunk();
     //-----
     QString vid_src;
@@ -30,7 +30,8 @@ public:
     VProcess(TimeLine* timeline, QObject* parent = nullptr);
 
     // call
-    Q_INVOKABLE void ExportVideo(const QString& finalFFCommands);
+    Q_INVOKABLE void exportVideo(const QString& finalFFCommands);
+    Q_INVOKABLE void set_ffPath(const QString& path);
     //
 
 private:
@@ -55,6 +56,7 @@ private:
     TimeLine* timeline;
     QString ffCommand = "ffmpeg -y ";
     QString input_files = "";
+    QString ffPath = "ffmpeg";
 };
 
 #endif // VPROCESS_H
