@@ -111,6 +111,50 @@ ApplicationWindow {
             }
         }
     }
+    // about-dialogs
+    Window {
+        id: licenseWindow
+        title: "License"
+        minimumWidth: window.minimumWidth*0.4; minimumHeight: window.minimumHeight*0.25
+        maximumWidth: window.maximumWidth*0.4; maximumHeight: window.maximumHeight*0.25
+        Rectangle {
+            anchors.fill: parent
+            color: "#101010"
+            MouseArea {
+                anchors.fill: parent
+            }
+        }
+        Column {
+            anchors.centerIn: parent
+            spacing: 10
+            Label {
+                text: "You need a valid license in order to use this feature"
+                color: "white"
+            }
+            TextField {
+                placeholderText: "Lisence Key"
+            }
+            Button {
+                text: "Unlock"
+                width: 60; height: 30
+                onClicked: {
+                    // this is all u get :)
+                    invalidKeyId.visible = true
+                }
+            }
+            Label {
+                id: invalidKeyId
+                visible: false
+                text: "Invalid License Key"
+                color: "red"
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 10
+            }
+        }
+        onWindowStateChanged: {
+            invalidKeyId.visible = false
+        }
+    }
 
     // ---------
 

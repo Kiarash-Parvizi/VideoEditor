@@ -118,6 +118,7 @@ Item {
                 height: parent.height*0.7
             }
             onClicked: {
+                if (textField_from.text.length === 0 || textField_to.text.length === 0) return
                 parent.start = parseInt(textField_from.text)
                 parent.end   = parseInt(textField_to.text)
                 parent._source = mediaSection.video.fullVidSource

@@ -6,7 +6,7 @@
 VChunk::VChunk() {}
 
 VChunk::VChunk(int idx, const QString& vid_src, ll vStart, ll vEnd,
-               const QString& aud_src, ll aStart, ll aEnd, const QVector<Effect*>& efct)
+               const QString& aud_src, ll aStart, ll aEnd, bool hasAudio, const QVector<Effect*>& efct)
     : idx(idx)
     , vid_src(vid_src)
     , vStart(vStart)
@@ -14,28 +14,33 @@ VChunk::VChunk(int idx, const QString& vid_src, ll vStart, ll vEnd,
     , aud_src(aud_src)
     , aStart(aStart)
     , aEnd(aEnd)
-    , effects(efct.size())
+    , hasAudio(hasAudio)
 {
-    int i = 0; for (const auto ef : efct) {
-        effects[i] = ef->clone();
-    i++; }
+    for (auto ef : efct) {
+        this->effects.push_back(ef->clone());
+        qDebug() << ":->" << effects[effects.size()-1]->get_command(1,1);
+    }
 }
 
 VChunk::~VChunk() {
     for (const auto efc : effects) {
-        delete efc;
+        //delete efc;
     }
 }
 
-QString VChunk::get_command(const QMap<QString, int>& map_name_id) const {
-    QString ret = QString("[") + QString::number(map_name_id[vid_src]) + ":v]" +
+QString VChunk::get_command(const QMap<QString, int>& map_name_id, const QString& scaleStr, const QString& darStr) const {
+    QString ret;
+    ret += QString("[") + QString::number(map_name_id[vid_src]) + ":v]" +
         "trim=start="+QString::number(vStart)+"ms:end="+QString::number(vEnd)+
-        "ms,setpts=PTS-STARTPTS[v"+QString::number(idx)+"]";
-    int i = 0; for (const auto efc : effects) {
-        ret += efc->get_command(idx, i);
+        "ms,scale="+scaleStr+",setdar="+darStr+",setpts=PTS-STARTPTS[v"+QString::number(idx)+"]";
+    int i = 0; for (auto efc : effects) {
+        qDebug() << ".";
+        ret += QString(";") + efc->get_command(idx, i);
     ++i; }
+    QString audioStateCmd = hasAudio ? "" : ",volume=volume=0";
     ret += QString(";[")+QString::number(map_name_id[aud_src])+":a]atrim=start="+
-            QString::number(aStart)+"ms:end="+QString::number(aEnd)+"ms,asetpts=PTS-STARTPTS[a"+QString::number(idx)+"]";
+            QString::number(aStart)+"ms:end="+QString::number(aEnd)+"ms,asetpts=PTS-STARTPTS"+
+            audioStateCmd+"[a"+QString::number(idx)+"]";
     return ret;
 }
 
@@ -63,6 +68,11 @@ void VProcess::exportVideo(const QString& finalFFCommand) {
     reset();
     // vchunk-processing
     calc_vchuncks();
+    // err-check
+    if (!vchunks.size()) {
+        qDebug() << "ERROR: nothing to export";
+        return;
+    }
     // command
     auto ffCommand = gen_ff_command(finalFFCommand);
     // exe
@@ -72,10 +82,25 @@ void VProcess::exportVideo(const QString& finalFFCommand) {
 }
 
 void VProcess::set_ffPath(const QString &path) {
+    for (QChar c : path) {
+        if (c == " ") {
+            qDebug() << "ERROR: Invalid ffpath -> path contains white-spaces";
+            return;
+        }
+    }
     ffPath = path;
 }
 
+void VProcess::set_scaleStr(const QString &scaleStr) {
+    this->scaleStr = scaleStr;
+}
+
+void VProcess::set_darStr(const QString &darStr) {
+    this->darStr = darStr;
+}
+
 void VProcess::reset() {
+    map_name_id.clear();
     vchunks.clear();
 }
 
@@ -86,12 +111,22 @@ void VProcess::register_data(const QString &src) {
 }
 
 void VProcess::calc_vchunks_fromVidItems() {
+    vchunks.reserve(timeline->model->getModelVec()->size());
     int i = 0;for(const auto& v : *timeline->model->getModelVec()) {
-        vchunks.push_back(VChunk(i, v._source, v.start, v.end, v._source, v.start, v.end, v.effects));
+        vchunks.push_back(VChunk(i, v._source, v.start, v.end, v._source, v.start, v.end, v.hasAudio, v.effects));
     ++i;}
+    qDebug() << "V->";
+    for (int i = 0; i < vchunks.size(); i++) {
+        for (int j = 0; j < vchunks[i].effects.size(); j++) {
+            qDebug() << "V->E :" << vchunks[i].aEnd;
+            qDebug() << "V->EF: " << vchunks[i].effects[j]->get_command(2,2);
+        }
+    }
 }
 
 void VProcess::merge_vchunks_aaudio() {
+    for (const auto& v : *timeline->aModel->getModelVec()) {
+    }
 }
 
 void VProcess::calc_vchuncks() {
@@ -100,7 +135,7 @@ void VProcess::calc_vchuncks() {
 }
 
 QString VProcess::gen_init_command() {
-    QString ret = ffPath + " ";
+    QString ret = ffPath + " -y ";
     QSet<QString> Set;
     for (const auto& v : vchunks) {
         Set.insert(v.vid_src);
@@ -118,7 +153,7 @@ QString VProcess::gen_init_command() {
 QString VProcess::gen_process_command() {
     QString ret;
     for (const auto& v : vchunks) {
-        ret += v.get_command(map_name_id) + ";";
+        ret += v.get_command(map_name_id, scaleStr, darStr) + ";";
     }
     return ret;
 }

@@ -31,13 +31,22 @@ MenuBar{
 
             Action {
                 text: "Open Project"
+                function loadFrom(path) {
+                    CppTimeLine.load(path)
+                }
                 onTriggered: {
+                    licenseWindow.show()
+                    //fileDialog_single.getFile(loadFrom, "Load Project")
                     soundEffects.play_done()
                 }
             }
             Action {
                 text: "Save Project"
+                function saveAt(path) {
+                    CppTimeLine.save(path)
+                }
                 onTriggered: {
+                    fileDialog_single.getFile(saveAt, "Save Project")
                     soundEffects.play_done()
                 }
             }

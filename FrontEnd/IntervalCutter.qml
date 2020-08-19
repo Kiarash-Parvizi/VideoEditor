@@ -65,6 +65,7 @@ Item {
                 height: parent.height*0.7
             }
             onClicked: {
+                if (textField_from.text.length === 0 || textField_to.text.length === 0) return
                 CppTimeLine.cut_interval(textField_from.text, textField_to.text)
                 timeLine.tl_ptr.reset()
                 soundEffects.play_done()

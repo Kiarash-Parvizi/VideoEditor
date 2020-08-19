@@ -39,6 +39,11 @@ public:
 
     //Effects
     Q_INVOKABLE void add_blur(ll vTime, int x, int y, int w, int h);
+    Q_INVOKABLE void set_hasAudio(int idx);
+
+    // save & load
+    Q_INVOKABLE void save(const QString& path);
+    Q_INVOKABLE void load(const QString& path);
 
     //
     //Q_INVOKABLE void add_ABuf(const QString& source, ll start, ll end);

@@ -115,6 +115,21 @@ Item {
             }
             onClicked: {
                 soundEffects.play_done()
+                if (CppTimeLine.totalVidLen === 0
+                   || p1_x_text.length == 0
+                   || p1_y_text.length == 0
+                   || p2_x_text.length == 0
+                   || p2_y_text.length == 0
+                ) {
+                    print("Invalid Properties")
+                    return
+                }
+                let
+                   x = parseInt(p1_x_text.text),
+                   y = parseInt(p1_y_text.text),
+                   w = parseInt(p2_x_text.text),
+                   h = parseInt(p2_y_text.text)
+                CppTimeLine.add_blur(timeLine.tl_ptr.pointer2.x/window.width * CppTimeLine.totalVidLen, x, y, w, h)
             }
         }
     }

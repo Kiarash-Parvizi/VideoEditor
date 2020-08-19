@@ -80,11 +80,18 @@ int TVideo_Model::getIdx(ll vtime)
         auto len = v[i].len;
         auto s = vTime, e = vTime + len;
         //
+        //qDebug() << "(s,e): " << s << ", " << e;
+        //qDebug() << "vtime: " << vtime;
+        //qDebug() << "vTime: " << vTime;
         // Find end section:
         if (vtime >= s && vtime <= e) {
+            //qDebug() << "id_. ..-> " << i;
             return i;
         }
+        //
+        vTime += len;
     }
+    //qDebug() << "id_. ..-> " << -1;
     return -1;
 }
 
@@ -100,7 +107,14 @@ void TVideo_Model::trim(ll minLen) {
 
 void TVideo_Model::add_blur(ll vTime, int x, int y, int w, int h) {
     int idx = getIdx(vTime);
+    if (idx == -1) {
+        qDebug() << "Error: Invalid properties";
+    }
     v[idx].effects.push_back(new Blur(x, y, w, h));
+}
+
+void TVideo_Model::set_hasAudio(int idx) {
+    v[idx].hasAudio = !v[idx].hasAudio;
 }
 
 void TVideo_Model::set_emitStateChanged_func(const std::function<void ()>& func) {

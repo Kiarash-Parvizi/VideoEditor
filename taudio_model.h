@@ -4,6 +4,7 @@
 #include<QAbstractListModel>
 #include<QObject>
 #include<QDebug>
+#include<fstream>
 
 #define ll long long
 
@@ -35,6 +36,24 @@ class TAudio_Model : public QAbstractListModel
         void set_sPosRatio(double v) {
             sPosRatio = v;
         }
+        // save
+        void save(std::ofstream& out) {
+            using namespace std;
+            out << _source.toUtf8().constData() << "\" " << len << " " << medStart << " " << medEnd << " " << sPosRatio << " ";
+        }
+        // load
+        void load(std::ifstream& iF) {
+            using namespace std;
+            string s; s.reserve(32);
+            string src; src.reserve(64);
+            do {
+                iF >> s; src += s;
+            } while(s[s.size()-1] != '\"');
+            src.erase(src.end()-1);
+            _source = QString::fromStdString(src);
+            //
+            iF >> len >> medStart >> medEnd >> sPosRatio;
+        }
     private:
         void calcLen() {
             len = medEnd - medStart;
@@ -55,6 +74,14 @@ public:
     //
     const QVector<ModelItem>* getModelVec() const {
         return &v;
+    }
+    void force_resetModel(int size) {
+        beginResetModel();
+        v = QVector<ModelItem>(size);
+        endResetModel();
+    }
+    void emit_everythingChanged() {
+        emit dataChanged(createIndex(0,0), createIndex(v.size()-1,0), { _source, len, medStart, medEnd, sPosRatio });
     }
 
     //

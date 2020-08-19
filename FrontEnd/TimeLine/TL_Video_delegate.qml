@@ -10,6 +10,7 @@ Component {
         width: CppTimeLine.calc_width(model.len, window.width); height: parent.height
         color: "#303030"
         function reCalc() {
+            print("len" + model.len)
             width = CppTimeLine.calc_width(model.len, window.width)
         }
 
@@ -52,10 +53,12 @@ Component {
                 }
             }
             MenuItem {
-                text: "Mute Audio"
+                property bool notMuted: true
+                text: notMuted ? "Mute Audio" : "Unmute Audio"
                 onClicked: {
                     soundEffects.play_done()
-                    CppTimeLine.del_VBuf(model.index)
+                    CppTimeLine.set_hasAudio(model.index)
+                    notMuted = !notMuted
                 }
             }
             z: 20

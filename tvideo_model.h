@@ -33,6 +33,34 @@ public:
         void set_end(ll val) {
             end   = val; calcLen();
         }
+        // save
+        void save(std::ofstream& out) {
+            using namespace std;
+            out << _source.toUtf8().constData() << "\" " << len << " " << start << " " << end << " " << hasAudio << " ";
+            out << effects.size() << " ";
+            for (const auto e : effects) {
+                e->write_data(out);
+            }
+        }
+        // load
+        void load(std::ifstream& iF) {
+            using namespace std;
+            string s; s.reserve(32);
+            string src; src.reserve(64);
+            do {
+                iF >> s; src += s;
+            } while(s[s.size()-1] != '\"');
+            src.erase(src.end()-1);
+            _source = QString::fromStdString(src);
+            //
+            iF >> len >> start >> end >> hasAudio;
+            // effects
+            int efCount; iF >> efCount;
+            effects = QVector<Effect*>(efCount);
+            for (auto& val : effects) {
+                val->read_data(iF);
+            }
+        }
     };
 public:
     explicit TVideo_Model(QObject *parent = nullptr);
@@ -56,9 +84,26 @@ public:
     //
     void trim(ll minLen);
     void add_blur(ll vTime, int x, int y, int w, int h);
+    void set_hasAudio(int idx);
 
     const QVector<ModelItem>* getModelVec() const {
         return &v;
+    }
+    void force_resetModel(int size) {
+        // You need
+        //beginResetModel();
+        //v.clear();
+        //endResetModel();
+
+        //beginInsertRows(QModelIndex(),0,v.size());
+
+        //v = QVector<ModelItem>(size);
+        //qDebug() << "insert done : " << v.size();
+
+        //endInsertRows();
+    }
+    void emit_everythingChanged() {
+        emit dataChanged(createIndex(0,0), createIndex(v.size()-1,0), {_source, len, start, end, hasAudio });
     }
 
     // setup

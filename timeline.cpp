@@ -58,6 +58,39 @@ void TimeLine::add_blur(long long vTime, int x, int y, int w, int h) {
     model->add_blur(vTime, x, y, w, h);
 }
 
+void TimeLine::set_hasAudio(int idx) {
+    model->set_hasAudio(idx);
+}
+
+void TimeLine::save(const QString &path) {
+    std::ofstream out(path.toUtf8().constData());
+    //out << get_totalVidLen();
+    out << model->getModelVec()->size() << " " << aModel->getModelVec()->size() << " ";
+    for (auto val : *model->getModelVec()) {
+        val.save(out);
+    }
+    for (auto val : *aModel->getModelVec()) {
+        val.save(out);
+    }
+}
+
+void TimeLine::load(const QString &path) {
+    std::ifstream in(path.toUtf8().constData());
+    int vidCount, audCount;
+    in >> vidCount >> audCount;
+    model->force_resetModel(vidCount);
+    for (auto val : *model->getModelVec()) {
+        val.load(in);
+    }
+    model->emit_everythingChanged();
+    //
+    aModel->force_resetModel(audCount);
+    for (auto val : *aModel->getModelVec()) {
+        val.load(in);
+    }
+    aModel->emit_everythingChanged();
+}
+
 void TimeLine::trim(ll minLen) {
     model->trim(minLen);
 }
