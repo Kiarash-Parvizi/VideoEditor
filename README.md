@@ -1,4 +1,5 @@
 # Basu Video Editor
-development phase
+Uni-AP-Project
 
 ---
+You need to install ffmpeg and add it to your path
